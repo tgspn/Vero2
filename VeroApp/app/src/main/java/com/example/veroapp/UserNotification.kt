@@ -28,12 +28,7 @@ class UserNotification : AppCompatActivity() {
 
         thread {
             var database: AppDatabase
-            database = Room.databaseBuilder(
-                this,
-                AppDatabase::class.java,
-                "vero-database"
-            ).fallbackToDestructiveMigration()
-                .build()
+            database =AppDatabase.getInstance(this)
 
 
 

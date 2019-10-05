@@ -36,12 +36,7 @@ class CheckNotification : JobService() {
         Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
         // perform work here, i.e. network calls asynchronously
         //var activity = this.applicationContext
-        var database = Room.databaseBuilder(
-            this,
-            AppDatabase::class.java,
-            "vero-database"
-        ).fallbackToDestructiveMigration()
-            .build()
+        var database = AppDatabase.getInstance(this)
         val mapper = jacksonObjectMapper()
 
 
@@ -81,25 +76,7 @@ class CheckNotification : JobService() {
         intent.putExtra("modelText",requestUserModel)
         startActivity(intent);
 
-//        val alertDialog: AlertDialog? = activity?.let {
-//            val builder = AlertDialog.Builder(it)
-//            builder.apply {
-//                setPositiveButton(R.string.ok,
-//                    DialogInterface.OnClickListener { dialog, id ->
-//                        // User clicked OK button
-//                    })
-//                setNegativeButton(R.string.cancel,
-//                    DialogInterface.OnClickListener { dialog, id ->
-//                        // User cancelled the dialog
-//                    })
-//            }
-//            // Set other dialog properties
-//            builder.setMessage("Teste")
-//            // Create the AlertDialog
-//            builder.create()
-//        }
     }
 
-    fun checkUser() {}
 
 }
