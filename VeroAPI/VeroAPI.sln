@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperledgerTest", "HyperledgerTest\HyperledgerTest.csproj", "{FAF84CDE-27C1-4922-9F06-44992B93C923}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VeroAPI", "VeroAPI\VeroAPI.csproj", "{730CB17F-295D-4471-ADFB-EE1084490456}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FAF84CDE-27C1-4922-9F06-44992B93C923}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAF84CDE-27C1-4922-9F06-44992B93C923}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAF84CDE-27C1-4922-9F06-44992B93C923}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAF84CDE-27C1-4922-9F06-44992B93C923}.Release|Any CPU.Build.0 = Release|Any CPU
+		{730CB17F-295D-4471-ADFB-EE1084490456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{730CB17F-295D-4471-ADFB-EE1084490456}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{730CB17F-295D-4471-ADFB-EE1084490456}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{730CB17F-295D-4471-ADFB-EE1084490456}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {93D58594-C215-4D93-976C-27D520F79CEB}
+	EndGlobalSection
+EndGlobal
