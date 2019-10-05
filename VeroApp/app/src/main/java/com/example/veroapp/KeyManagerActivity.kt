@@ -28,12 +28,7 @@ class KeyManagerActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         try {
             thread {
-                database = Room.databaseBuilder(
-                    this,
-                    AppDatabase::class.java,
-                    "vero-database"
-                ).fallbackToDestructiveMigration()
-                    .build()
+                database = AppDatabase.getInstance(this)
 
                 run {
                     database.keyDAO().all().forEach {

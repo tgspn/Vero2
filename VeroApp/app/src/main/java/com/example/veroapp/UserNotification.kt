@@ -28,12 +28,7 @@ class UserNotification : AppCompatActivity() {
 
         thread {
             var database: AppDatabase
-            database = Room.databaseBuilder(
-                this,
-                AppDatabase::class.java,
-                "vero-database"
-            ).fallbackToDestructiveMigration()
-                .build()
+            database =AppDatabase.getInstance(this)
 
 
 
@@ -59,8 +54,8 @@ class UserNotification : AppCompatActivity() {
                         try {
                             var header = HashMap<String, String>()
                             header["Content-Type"] = "application/json"
-                            var json = JSONObject.wrap(model)
-                            var result = khttp.post(url, json = json, headers = header)
+                            var json = mapper.writeValueAsBytes(model)
+                            var result = khttp.post(url, data = json, headers = header)
                             var content = result.text
                         } catch (ex: Exception) {
                             ex.printStackTrace()
