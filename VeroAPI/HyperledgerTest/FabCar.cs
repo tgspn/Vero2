@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Hyperledger.Fabric.SDK;
-using Grpc;
-using Grpc.Core;
 using Hyperledger.Fabric.Protos.Msp.MspConfig;
 using Hyperledger.Fabric.SDK.AMCL;
 using Hyperledger.Fabric.SDK.AMCL.FP256BN;
