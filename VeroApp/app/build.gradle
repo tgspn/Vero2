@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 apply plugin: "kotlin-kapt"
+apply plugin: 'com.google.protobuf'
 
 android {
     compileSdkVersion 28
@@ -52,5 +53,15 @@ dependencies {
     def room_version = "1.1.1"
     implementation "android.arch.persistence.room:runtime:$room_version"
     kapt "android.arch.persistence.room:compiler:$room_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
 }
+
+
+android {
+    // Android Studio 3.1 does not automatically pick up 'src/main/kotlin' as source files
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+}
+
