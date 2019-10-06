@@ -12,10 +12,10 @@
 
   <ItemGroup>
     <Reference Include="Hyperledger.Fabric.SDK">
-      <HintPath>..\..\..\..\fabric-sdk-net\fabric-sdk-net\FabricSDK\bin\Debug\netstandard2.0\Hyperledger.Fabric.SDK.dll</HintPath>
+      <HintPath>..\..\DLL\Hyperledger.Fabric.SDK.dll</HintPath>
     </Reference>
     <Reference Include="Hyperledger.Fabric_CA.SDK">
-      <HintPath>C:\Users\tiago\.nuget\packages\hyperledger.fabric_ca.sdk\1.3.0\lib\netstandard2.0\Hyperledger.Fabric_CA.SDK.dll</HintPath>
+      <HintPath>..\..\DLL\Hyperledger.Fabric_CA.SDK.dll</HintPath>
     </Reference>
   </ItemGroup>
 
