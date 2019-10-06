@@ -11,14 +11,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hyperledger.Fabric.SDK" Version="1.3.1" />
-    <PackageReference Include="Hyperledger.Fabric_CA.SDK" Version="1.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.4.10" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
   <PackageReference Include="Genesis.QRCodeLib" Version="1.0.0" />
   <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Hyperledger.Fabric.SDK">
+      <HintPath>..\..\DLL\Hyperledger.Fabric.SDK.dll</HintPath>
+    </Reference>
+    <Reference Include="Hyperledger.Fabric_CA.SDK">
+      <HintPath>..\..\DLL\Hyperledger.Fabric_CA.SDK.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
