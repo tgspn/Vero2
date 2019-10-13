@@ -54,14 +54,83 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$room_version"
     kapt "android.arch.persistence.room:compiler:$room_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'io.grpc:grpc-okhttp:1.24.0'
+    implementation 'io.grpc:grpc-protobuf-lite:1.24.0'
+    implementation 'io.grpc:grpc-stub:1.24.0'
+    implementation "com.google.protobuf:protobuf-java:3.9.0"
+    implementation group: 'javax.annotation', name: 'javax.annotation-api', version: '1.2-b01'
+
+    def grpc = '1.20.0'
+    def protobuf = '3.7.1'
+    def bouncycastle = '1.61'
+    def httpclient =  '4.5.8'
+    def log4j =  '1.2.17'
+
+    testImplementation "junit:junit:4.12"
+    implementation "io.grpc:grpc-netty:${grpc}"
+    implementation "io.grpc:grpc-protobuf:${grpc}"
+    implementation "io.grpc:grpc-stub:${grpc}"
+    implementation "io.netty:netty-tcnative-boringssl-static:2.0.25.Final"
+    implementation "io.netty:netty-codec-http2:4.1.35.Final"
+    implementation "com.google.protobuf:protobuf-java:${protobuf}"
+    implementation "com.google.protobuf:protobuf-java-util:${protobuf}"
+    implementation "org.bouncycastle:bcpkix-jdk15on:${bouncycastle}"
+    implementation "commons-logging:commons-logging:1.2"
+    implementation "commons-cli:commons-cli:1.4"
+    implementation "org.apache.commons:commons-compress:1.18"
+    implementation "commons-io:commons-io:2.6"
+    implementation "log4j:log4j:${log4j}"
+    implementation "log4j:apache-log4j-extras:${log4j}"
+    implementation "org.apache.httpcomponents:httpclient:${httpclient}"
+    testImplementation "org.apache.httpcomponents:httpmime:${httpclient}"
+    implementation "com.spotify:futures-extra:4.2.0"
+    implementation "com.google.api:api-common:1.8.1"
+    implementation "org.glassfish:javax.json:1.1.4"
+    implementation "org.yaml:snakeyaml:1.24"
+    implementation "org.miracl.milagro.amcl:milagro-crypto-java:0.4.0"
+    implementation "javax.xml.bind:jaxb-api:2.3.1"
+
+    // https://mvnrepository.com/artifact/org.hyperledger.fabric-chaincode-java/fabric-chaincode-protos
+    implementation group: 'org.hyperledger.fabric-chaincode-java', name: 'fabric-chaincode-protos', version: '1.3.0'
 
 }
 
-
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.9.0'
+        // path = 'D:\\Projetos\\PRJ\\protobof\\bin\\protoc.exe'
+    }
+    plugins {
+        //javalite { artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0" }
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.24.0' // CURRENT_GRPC_VERSION
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.plugins {
+                // javalite {}
+                grpc { // Options added to --grpc_out
+                    option 'all'
+                }
+            }
+        }
+    }
+}
 android {
     // Android Studio 3.1 does not automatically pick up 'src/main/kotlin' as source files
     sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+        main.java.srcDirs += 'src/main/java'
     }
 }
 
+if (project.hasProperty('kapt')) {
+    // Reference for 'kapt' DSL: https://kotlinlang.org/docs/reference/kapt.html#java-compiler-options
+    kapt {
+        // we expect this closure to run over a org.jetbrains.kotlin.gradle.plugin.KaptExtension
+        javacOptions {
+            option("-source", "9")
+            option("-target", "9")
+        }
+    }
+}

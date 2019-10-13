@@ -11,10 +11,19 @@ import com.example.veroapp.Database.AppDatabase
 import com.example.veroapp.models.RequestUserModel
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.grpc.Channel
 import kotlinx.android.synthetic.main.activity_user_notification.*
 import org.json.JSONObject
 import java.lang.ref.WeakReference
 import kotlin.concurrent.thread
+import io.grpc.ManagedChannel
+import io.grpc.ManagedChannelBuilder
+import io.grpc.ManagedChannelProvider
+import org.bouncycastle.asn1.x500.style.RFC4519Style.c
+import java.io.PrintWriter
+import java.io.StringWriter
+import java.util.concurrent.TimeUnit
+
 
 class UserNotification : AppCompatActivity() {
 
@@ -92,10 +101,14 @@ private class GrpcTask constructor(activity: Activity) : AsyncTask<String, Void,
         val port = if (TextUtils.isEmpty(portStr)) 0 else Integer.valueOf(portStr)
         return try {
             channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build()
-            val stub = GreeterGrpc.newBlockingStub(channel)
-            val request = HelloRequest.newBuilder().setName(message).build()
-            val reply = stub.sayHello(request)
-            reply.message
+            channel.toString()
+
+
+
+//            val stub = GreeterGrpc.newBlockingStub(channel)
+//            val request = HelloRequest.newBuilder().setName(message).build()
+//            val reply = stub.sayHello(request)
+//            reply.message
         } catch (e: Exception) {
             val sw = StringWriter()
             val pw = PrintWriter(sw)
@@ -104,6 +117,7 @@ private class GrpcTask constructor(activity: Activity) : AsyncTask<String, Void,
 
             "Failed... : %s".format(sw)
         }
+
     }
 
     override fun onPostExecute(result: String) {
@@ -113,12 +127,12 @@ private class GrpcTask constructor(activity: Activity) : AsyncTask<String, Void,
             Thread.currentThread().interrupt()
         }
 
-        val activity = activityReference.get() ?: return
-        val resultText: TextView = activity.findViewById(R.id.grpc_response_text)
-        val sendButton: Button = activity.findViewById(R.id.send_button)
+//        val activity = activityReference.get() ?: return
+//        val resultText: TextView = activity.findViewById(R.id.grpc_response_text)
+//        val sendButton: Button = activity.findViewById(R.id.send_button)
 
-        resultText.text = result
-        sendButton.isEnabled = true
+//        resultText.text = result
+//        sendButton.isEnabled = true
     }
 }
 
