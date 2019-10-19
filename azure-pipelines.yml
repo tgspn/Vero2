@@ -37,11 +37,11 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
+
+# Gradle
+# Build using a Gradle wrapper script
+- task: Gradle@2
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
-
-
+    gradleWrapperFile: 'VeroApp/gradlew.bat'
+    tasks: 'build'
 
