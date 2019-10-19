@@ -21,10 +21,10 @@
 
   <ItemGroup>
     <Reference Include="Hyperledger.Fabric.SDK">
-      <HintPath>..\..\DLL\Hyperledger.Fabric.SDK.dll</HintPath>
+      <HintPath>..\DLL\Hyperledger.Fabric.SDK.dll</HintPath>
     </Reference>
     <Reference Include="Hyperledger.Fabric_CA.SDK">
-      <HintPath>..\..\DLL\Hyperledger.Fabric_CA.SDK.dll</HintPath>
+      <HintPath>..\DLL\Hyperledger.Fabric_CA.SDK.dll</HintPath>
     </Reference>
   </ItemGroup>
 
