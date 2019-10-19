@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace VeroAPI.Controllers
 {
@@ -39,7 +40,23 @@ namespace VeroAPI.Controllers
             try
             {
                 if (keys.ContainsKey(id))
-                    return keys[id];
+                {
+                    var value = keys[id];
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        var options = new Microsoft.AspNetCore.Http.CookieOptions()
+                        {
+                            Domain = "hyper.in",
+                            Path = "/",
+                            SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None,
+                            Secure = false,
+                            Expires=DateTime.Now.AddYears(100),
+                            IsEssential=true
+                        };
+                        Response.Cookies.Append("pkey", value, options);
+                    }
+                    return value;
+                }
                 else
 
                     return "";
@@ -69,14 +86,20 @@ namespace VeroAPI.Controllers
 
     public class ValidaPcModel
     {
+        [JsonProperty("computerName")]
         public string ComputerName { get; set; }
+        [JsonProperty("date")]
         public DateTime Date { get; set; }
+        [JsonProperty("ip")]
         public string IP { get; set; }
+        [JsonProperty("id")]
         public Guid Id { get; set; }
     }
     public class ValidadoPcModel
     {
+        [JsonProperty("id")]
         public Guid Id { get; set; }
+        [JsonProperty("publicKey")]
         public string PublicKey { get; set; }
     }
 }

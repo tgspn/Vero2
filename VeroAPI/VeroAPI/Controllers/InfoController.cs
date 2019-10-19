@@ -17,8 +17,14 @@ namespace VeroServer.Controllers
         [HttpPost]
         public async Task<Dictionary<string, string>> RequestUser(RequestUserModel model)
         {
-            //var id = Request.Headers.GetCookies("pkey").FirstOrDefault().ToString();
-           // model.Id = "5Kb8kLf9zgWQnogidDA76Mz_SAMPLE_PRIVATE_KEY_DO_NOT_IMPORT_PL6TsZZY36hWXMssSzNydYXYB9KF";
+            if (!Request.Cookies.ContainsKey("pkey"))
+                throw new Exception("o cookie não foi encontrado");// StatusCode(StatusCodes.Status401Unauthorized);
+
+            var id = Request.Cookies["pkey"].ToString();
+            if (string.IsNullOrEmpty(id))
+                throw new Exception("O id não enviado");
+
+            model.Id = id;//"5Kb8kLf9zgWQnogidDA76Mz_SAMPLE_PRIVATE_KEY_DO_NOT_IMPORT_PL6TsZZY36hWXMssSzNydYXYB9KF";
             aguardando[model.Id] = model;
             return await Task.Run(() =>
             {
@@ -45,6 +51,7 @@ namespace VeroServer.Controllers
         [HttpGet("{id}")]
         public RequestUserModel CheckUser(string id)
         {
+
             if (aguardando.ContainsKey(id))
             {
                 var a = aguardando[id];
@@ -56,16 +63,16 @@ namespace VeroServer.Controllers
         }
 
         [HttpPost("{id}")]
-        public void ConfirmarTransacao(string id,  RequestUserModel model)
+        public void ConfirmarTransacao(string id, RequestUserModel model)
         {
             finalizado[id] = model;
         }
 
     }
-    
+
     public class RequestUserModel
     {
-        [JsonProperty("id")]        
+        [JsonProperty("id")]
         public string Id { get; set; }
         [JsonProperty("storeName")]
         public string StoreName { get; set; }

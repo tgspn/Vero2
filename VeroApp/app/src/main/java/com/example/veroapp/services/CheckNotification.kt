@@ -44,7 +44,7 @@ class CheckNotification : JobService() {
         Timer().schedule(timerTask {
             thread {
                 database.keyDAO().all().forEach {
-                    val url = getString(R.string.server_endpoint) + "api/info/" + it.pc_id
+                    val url = getString(R.string.server_endpoint) + "api/info/" + it.id
 
                     val response = khttp.get(url)
                     if (response.statusCode == 200 && response.text != null) {
