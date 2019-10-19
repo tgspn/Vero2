@@ -37,5 +37,5 @@ steps:
 # Build using a Gradle wrapper script
 - task: Gradle@2
   inputs:
-    gradleWrapperFile: 'gradlew'
+    gradleWrapperFile: 'VeroApp/gradlew'
     tasks: 'build'
