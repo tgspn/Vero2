@@ -15,6 +15,7 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+    
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
@@ -33,5 +34,5 @@ steps:
 # Build using a Gradle wrapper script
 - task: Gradle@2
   inputs:
-    gradleWrapperFile: 'VeroApp/gradlew'
+    gradleWrapperFile: 'VeroApp/gradlew.bat'
     tasks: 'build'

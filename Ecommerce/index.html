@@ -1,0 +1,37 @@
+<button id="vero">Utilizar Vero</button>
+<form action="/teste">
+  <input name="nome" id="name">
+  <input name="endereco" id="endereco">
+  <input type="submit" value="Enviar">
+</form>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script>
+  $("#vero").click(() => {
+    $(this).prop('disabled', true)
+    $.ajax({
+      url: "http://hyper.in:8079/api/info",
+      method: "Post",
+      contentType: "application/json",
+      xhrFields: {
+        withCredentials: true
+      },
+      data: JSON.stringify({
+        //Id: "355db715-e036-4ccf-8420-9395d5d21159",
+        StoreName: "Americanas rap",
+        Fields: ["nome", "endereco", "email"],
+        Value: 100.00
+      }
+      ),
+      success: (d) => {
+        $("#name").val(d["nome"])
+        $("#endereco").val(d["endereco"])
+      },
+      error: (e) => {
+        console.log(e)
+      }
+
+    })
+  })
+
+</script>
