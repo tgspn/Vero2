@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -32,16 +34,23 @@ namespace VeroAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(options =>
-            {
+            {                
                 options.AddPolicy(MyAllowSpecificOrigins,
                 builder =>
                 {
                     builder.AllowAnyOrigin()
                     .AllowAnyHeader()
+                    .AllowCredentials()
                     .AllowAnyMethod();
                 });
             });
-            
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.None;
+                
+                options.CookieSecure = CookieSecurePolicy.None;
+            });
+
             services.AddMvc()
                 .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
