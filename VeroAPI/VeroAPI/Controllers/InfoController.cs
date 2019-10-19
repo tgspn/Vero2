@@ -18,7 +18,7 @@ namespace VeroServer.Controllers
         public async Task<Dictionary<string, string>> RequestUser(RequestUserModel model)
         {
             //var id = Request.Headers.GetCookies("pkey").FirstOrDefault().ToString();
-            model.Id = "5Kb8kLf9zgWQnogidDA76Mz_SAMPLE_PRIVATE_KEY_DO_NOT_IMPORT_PL6TsZZY36hWXMssSzNydYXYB9KF";
+           // model.Id = "5Kb8kLf9zgWQnogidDA76Mz_SAMPLE_PRIVATE_KEY_DO_NOT_IMPORT_PL6TsZZY36hWXMssSzNydYXYB9KF";
             aguardando[model.Id] = model;
             return await Task.Run(() =>
             {

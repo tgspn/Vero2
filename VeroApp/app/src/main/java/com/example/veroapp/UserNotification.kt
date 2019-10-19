@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.text.TextUtils
 import com.example.veroapp.Database.AppDatabase
 import com.example.veroapp.models.RequestUserModel
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.android.synthetic.main.activity_user_notification.*
@@ -54,9 +56,12 @@ class UserNotification : AppCompatActivity() {
                         try {
                             var header = HashMap<String, String>()
                             header["Content-Type"] = "application/json"
-                            var json = mapper.writeValueAsBytes(model)
-                            var result = khttp.post(url, data = json, headers = header)
+                            var json = mapper.convertValue<Map<String,Any>>(model)//mapper.writeValueAsBytes(model)
+                            var result = khttp.post(url, json = json, headers = header)
                             var content = result.text
+                            if(content ==""){
+
+                            }
                         } catch (ex: Exception) {
                             ex.printStackTrace()
                         }
