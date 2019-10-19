@@ -7,11 +7,11 @@ import android.arch.persistence.room.PrimaryKey
 class PessoaModel(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val nome: String,
-    val data_nascimeto: String,
-    val endereco: String,
-    val RG: String,
-    val CPF: String
+    var nome: String,
+    var data_nascimeto: String,
+    var endereco: String,
+    var RG: String,
+    var CPF: String
 ) {
 
 }

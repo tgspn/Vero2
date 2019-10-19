@@ -92,7 +92,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.nav_manage -> {
-
+                val intent = Intent(this,CadastroActivity::class.java)
+                startActivity(intent)
             }
             R.id.nav_share -> {
 
