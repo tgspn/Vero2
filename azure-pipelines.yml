@@ -42,7 +42,7 @@ steps:
 # Build using a Gradle wrapper script
 - task: Gradle@2
   inputs:
-    gradleWrapperFile: 'VeroApp/gradlew'
+    gradleWrapperFile: 'VeroApp/gradlew.bat'
     tasks: 'build'
 
 
