@@ -15,14 +15,6 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: Gradle@2
-  inputs:
-    workingDirectory: ''
-    gradleWrapperFile: 'gradlew'
-    gradleOptions: '-Xmx3072m'
-    publishJUnitResults: false
-    testResultsFiles: '**/TEST-*.xml'
-    tasks: 'assembleDebug'
     
 - task: NuGetToolInstaller@1
 
@@ -44,4 +36,3 @@ steps:
   inputs:
     gradleWrapperFile: 'VeroApp/gradlew.bat'
     tasks: 'build'
-
