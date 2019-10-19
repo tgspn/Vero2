@@ -18,6 +18,7 @@ import android.preference.RingtonePreference
 import android.text.TextUtils
 import android.view.MenuItem
 import com.example.veroapp.Database.AppDatabase
+import kotlin.concurrent.thread
 
 /**
  * A [PreferenceActivity] that presents a set of application settings. On
@@ -84,7 +85,7 @@ class CadastroActivity : AppCompatPreferenceActivity() {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"))
+            bindPreferenceSummaryToValue(findPreference("nome"))
             bindPreferenceSummaryToValue(findPreference("example_list"))
             bindPreferenceSummaryToValue(findPreference("dtNascimento"))
         }
@@ -162,6 +163,7 @@ class CadastroActivity : AppCompatPreferenceActivity() {
          * to reflect its new value.
          */
         private val sBindPreferenceSummaryToValueListener = Preference.OnPreferenceChangeListener { preference, value ->
+            var database = AppDatabase.getInstance(preference.context)
             val stringValue = value.toString()
 
             if (preference is ListPreference) {
@@ -204,14 +206,15 @@ class CadastroActivity : AppCompatPreferenceActivity() {
             } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
-                preference.summary = stringValue
-                var database = AppDatabase.getInstance(preference.context)
-                if (preference.key == "nome") {
-                    val dao = database.pessoaDAO()
-                    val pessoa = dao.get()
-                    pessoa.nome = stringValue
-                    dao.update(pessoa)
+                if (preference.shouldCommit() && preference.key == "nome") {
+                    thread {
+                        val dao = database.pessoaDAO()
+                        val pessoa = dao.get()
+                        pessoa.nome = stringValue
+                        dao.update(pessoa)
+                    }
                 }
+                preference.summary = stringValue
             }
             true
         }
