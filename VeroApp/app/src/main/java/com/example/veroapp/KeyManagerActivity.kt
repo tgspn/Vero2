@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_key_manager.*
 import kotlinx.android.synthetic.main.content_key_manager.*
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import kotlinx.android.synthetic.main.content_main.*
 import java.util.*
 import kotlin.concurrent.thread
 

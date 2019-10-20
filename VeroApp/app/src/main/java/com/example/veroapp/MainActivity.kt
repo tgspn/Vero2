@@ -22,6 +22,7 @@ import com.example.veroapp.Database.AppDatabase
 import com.example.veroapp.models.KeyModel
 import com.example.veroapp.models.PessoaModel
 import com.example.veroapp.services.CheckNotification
+import kotlinx.android.synthetic.main.content_main.*
 import kotlin.concurrent.thread
 
 
@@ -46,6 +47,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
+
+        btnKeys.setOnClickListener {
+            val intent= Intent(this, KeyManagerActivity::class.java);
+            startActivity(intent);
+        }
+
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
