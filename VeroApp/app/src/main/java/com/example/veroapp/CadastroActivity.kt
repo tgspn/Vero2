@@ -68,6 +68,7 @@ class CadastroActivity : AppCompatPreferenceActivity() {
                 || GeneralPreferenceFragment::class.java.name == fragmentName
                 || DataSyncPreferenceFragment::class.java.name == fragmentName
                 || NotificationPreferenceFragment::class.java.name == fragmentName
+                || EnderecoPreferenceFragment::class.java.name == fragmentName
     }
 
     /**
@@ -86,7 +87,8 @@ class CadastroActivity : AppCompatPreferenceActivity() {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("nome"))
-            bindPreferenceSummaryToValue(findPreference("example_list"))
+            bindPreferenceSummaryToValue(findPreference("rg"))
+            bindPreferenceSummaryToValue(findPreference("cpf"))
             bindPreferenceSummaryToValue(findPreference("dtNascimento"))
         }
 
@@ -99,7 +101,36 @@ class CadastroActivity : AppCompatPreferenceActivity() {
             return super.onOptionsItemSelected(item)
         }
     }
+    /**
+     * This fragment shows general preferences only. It is used when the
+     * activity is showing a two-pane settings UI.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    class EnderecoPreferenceFragment : PreferenceFragment() {
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            addPreferencesFromResource(R.xml.pref_data_endereco)
+            setHasOptionsMenu(true)
 
+            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
+            // to their values. When their values change, their summaries are
+            // updated to reflect the new value, per the Android Design
+            // guidelines.
+            bindPreferenceSummaryToValue(findPreference("rua"))
+            bindPreferenceSummaryToValue(findPreference("bairro"))
+            bindPreferenceSummaryToValue(findPreference("estado"))
+            bindPreferenceSummaryToValue(findPreference("pais"))
+        }
+
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
+            val id = item.itemId
+            if (id == android.R.id.home) {
+                startActivity(Intent(activity, CadastroActivity::class.java))
+                return true
+            }
+            return super.onOptionsItemSelected(item)
+        }
+    }
     /**
      * This fragment shows notification preferences only. It is used when the
      * activity is showing a two-pane settings UI.
@@ -115,7 +146,7 @@ class CadastroActivity : AppCompatPreferenceActivity() {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"))
+//            bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"))
         }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -206,14 +237,27 @@ class CadastroActivity : AppCompatPreferenceActivity() {
             } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
-                if (preference.shouldCommit() && preference.key == "nome") {
+                if (preference.shouldCommit()) {
+
                     thread {
                         val dao = database.pessoaDAO()
                         val pessoa = dao.get()
-                        pessoa.nome = stringValue
+
+                        if (preference.key == "nome")
+                            pessoa.nome = stringValue
+                        else if (preference.key == "dtNascimento")
+                            pessoa.data_nascimeto = stringValue
+                        else if (preference.key == "cpf")
+                            pessoa.CPF = stringValue
+                        else if (preference.key == "rg")
+                            pessoa.RG = stringValue
+                        else if (preference.key == "")
+                            pessoa.endereco = stringValue
+
                         dao.update(pessoa)
                     }
                 }
+
                 preference.summary = stringValue
             }
             true
