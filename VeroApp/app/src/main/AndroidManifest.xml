@@ -17,12 +17,10 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+
         <activity android:name=".UserNotification">
         </activity>
-        <activity
-                android:name=".CheckInfoActivity"
-                android:label="@string/title_activity_check_info">
-        </activity>
+
         <activity android:name=".StartActivity">
         </activity>
         <activity android:name=".SplashScreen">
