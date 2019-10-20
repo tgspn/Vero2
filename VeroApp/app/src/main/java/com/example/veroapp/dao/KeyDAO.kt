@@ -10,4 +10,6 @@ interface  KeyDAO {
     fun all(): List<KeyModel>
     @Insert
     fun add(vararg keymodel: KeyModel)
+    @Query("SELECT COUNT(*) FROM keymodel")
+    fun count():Int
 }

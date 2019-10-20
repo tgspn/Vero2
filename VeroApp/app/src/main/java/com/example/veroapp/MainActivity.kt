@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                var database =AppDatabase.getInstance(this)
 
                database.pessoaDAO().add(PessoaModel(0,"Tiago Spana","10/03/1989","Av Otto","44.564.527-1","230.188.408-28" ))
-               database.keyDAO().add(KeyModel("Win10","04/10/2019", "192.168.0.104",id =0,pc_id = "c04b5c82-5b6e-460a-a969-b6e2331a5150"))
+               database.keyDAO().add(KeyModel("Win10","04/10/2019", "192.168.0.104",pc_id = "c04b5c82-5b6e-460a-a969-b6e2331a5150"))
            }
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()

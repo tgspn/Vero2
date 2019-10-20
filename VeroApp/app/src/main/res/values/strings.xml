@@ -99,4 +99,5 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_cadastro">Cadastros</string>
+    <string name="title_activity_keys_list">activity_keys_list</string>
 </resources>

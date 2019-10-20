@@ -9,10 +9,12 @@
 
     <TextView
             android:text="TextView"
-            android:layout_width="288dp"
+            android:layout_width="249dp"
             android:layout_height="593dp"
             android:id="@+id/txtResult"
-            tools:layout_editor_absoluteY="39dp" tools:layout_editor_absoluteX="61dp"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="52dp" android:layout_marginTop="16dp"
+            app:layout_constraintTop_toTopOf="parent"/>
     <Button
             android:text="Confirmar"
             android:layout_width="114dp"
