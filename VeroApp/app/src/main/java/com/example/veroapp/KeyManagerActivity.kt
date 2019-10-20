@@ -27,25 +27,22 @@ class KeyManagerActivity : AppCompatActivity() {
     var scannedResult: String = ""
     val database: AppDatabase = AppDatabase.getInstance(this)
     val mapper = jacksonObjectMapper()
+    lateinit var adapter: KeysAdapter
+    lateinit var list:MutableList<KeyModel>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_key_manager)
         setSupportActionBar(toolbar)
-        lvKeys.layoutManager=LinearLayoutManager(this)
-
-
+        lvKeys.layoutManager = LinearLayoutManager(this)
 
         try {
             thread {
-                lvKeys.adapter = KeysAdapter(this, database.keyDAO().all().toMutableList())
+                list=database.keyDAO().all().toMutableList()
+                adapter = KeysAdapter(this, list)
+                lvKeys.adapter = adapter
             }
-//            database.keyDAO().all().forEach {
-////                txtValue.text = "Computador: " + it.computerName + "\r\n" +
-////                        "data: " + it.date + "\r\n" +
-////                        "ip: " + it.ip + "\r\n" +
-////                        "id: " + it.id + "\r\n" +
-////                        "PC id: " + it.pc_id
-//            }
+
 
         } catch (e: Exception) {
             Toast.makeText(this, e.message, Toast.LENGTH_LONG)
@@ -73,7 +70,7 @@ class KeyManagerActivity : AppCompatActivity() {
 
             if (result.contents != null) {
                 scannedResult = result.contents
-              //  txtValue.text = this.scannedResult
+                //  txtValue.text = this.scannedResult
 
                 try {
                     val model = mapper.readValue<ValidaPcModel>(scannedResult)
@@ -86,7 +83,7 @@ class KeyManagerActivity : AppCompatActivity() {
                     )
                     thread {
                         database.keyDAO().add(keyMode)
-                        model.publicKey=keyMode.id
+                        model.publicKey = keyMode.id
                         val url = getString(R.string.server_endpoint) + "api/validate/"
                         try {
                             var header = HashMap<String, String>()
@@ -94,13 +91,9 @@ class KeyManagerActivity : AppCompatActivity() {
                             var json = mapper.convertValue<Map<String, Any>>(model)//mapper.writeValueAsBytes(model)
                             var result = khttp.post(url, json = json, headers = header)
                             var content = result.text
-                            if (result.statusCode==200)
-                            {
-//                                txtValue.text = model.computerName + "\r\n" +
-//                                        model.date + "\r\n" +
-//                                        model.ip + "\r\n" +
-//                                        model.id+"\r\n" +
-//                                        model.publicKey
+                            if (result.statusCode == 200) {
+                                
+                                adapter.notifyDataSetChanged()
                             }
                         } catch (ex: Exception) {
                             ex.printStackTrace()
