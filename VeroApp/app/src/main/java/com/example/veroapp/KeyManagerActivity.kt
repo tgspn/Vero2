@@ -5,8 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager
+import android.widget.LinearLayout
 import android.widget.Toast
 import com.example.veroapp.Database.AppDatabase
+import com.example.veroapp.adpters.KeysAdapter
 import com.example.veroapp.models.KeyModel
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.google.zxing.integration.android.IntentIntegrator
@@ -28,14 +31,21 @@ class KeyManagerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_key_manager)
         setSupportActionBar(toolbar)
+        lvKeys.layoutManager=LinearLayoutManager(this)
+
+
+
         try {
-            database.keyDAO().all().forEach {
-                txtValue.text = "Computador: " + it.computerName + "\r\n" +
-                        "data: " + it.date + "\r\n" +
-                        "ip: " + it.ip + "\r\n" +
-                        "id: " + it.id + "\r\n" +
-                        "PC id: " + it.pc_id
+            thread {
+                lvKeys.adapter = KeysAdapter(this, database.keyDAO().all().toMutableList())
             }
+//            database.keyDAO().all().forEach {
+////                txtValue.text = "Computador: " + it.computerName + "\r\n" +
+////                        "data: " + it.date + "\r\n" +
+////                        "ip: " + it.ip + "\r\n" +
+////                        "id: " + it.id + "\r\n" +
+////                        "PC id: " + it.pc_id
+//            }
 
         } catch (e: Exception) {
             Toast.makeText(this, e.message, Toast.LENGTH_LONG)
@@ -86,11 +96,11 @@ class KeyManagerActivity : AppCompatActivity() {
                             var content = result.text
                             if (result.statusCode==200)
                             {
-                                txtValue.text = model.computerName + "\r\n" +
-                                        model.date + "\r\n" +
-                                        model.ip + "\r\n" +
-                                        model.id+"\r\n" +
-                                        model.publicKey
+//                                txtValue.text = model.computerName + "\r\n" +
+//                                        model.date + "\r\n" +
+//                                        model.ip + "\r\n" +
+//                                        model.id+"\r\n" +
+//                                        model.publicKey
                             }
                         } catch (ex: Exception) {
                             ex.printStackTrace()
@@ -102,7 +112,7 @@ class KeyManagerActivity : AppCompatActivity() {
                     e.printStackTrace()
                 }
             } else {
-                txtValue.text = "scan failed"
+//                txtValue.text = "scan failed"
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
@@ -120,7 +130,7 @@ class KeyManagerActivity : AppCompatActivity() {
 
         savedInstanceState?.let {
             scannedResult = it.getString("scannedResult")
-            txtValue.text = scannedResult
+//            txtValue.text = scannedResult
         }
     }
 
