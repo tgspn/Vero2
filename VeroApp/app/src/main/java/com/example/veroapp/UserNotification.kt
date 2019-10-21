@@ -27,6 +27,7 @@ class UserNotification : AppCompatActivity() {
         val mapper = jacksonObjectMapper()
         val model = mapper.readValue<RequestUserModel>(modelText)
 
+        txtStoreName.text=model.storeName
         txtResult.text = "\t" + model.storeName + "\r\n\r\nCampos:\r\n\r\n" + TextUtils.join("\r\n", model.fields)
 
 //        thread {
