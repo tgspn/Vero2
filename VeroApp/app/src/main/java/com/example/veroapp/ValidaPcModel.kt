@@ -10,7 +10,3 @@ class ValidaPcModel(
     var publicKey: String = ""
 ){}
 
-class FieldsModel(
-    val fieldName:String,
-    val checked:Boolean
-){}

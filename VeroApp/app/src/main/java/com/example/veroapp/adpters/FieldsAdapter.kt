@@ -14,7 +14,7 @@ import kotlin.concurrent.thread
 
 class FieldsAdapter(val context: Context, private var list: MutableList<FieldsModel>) : RecyclerView.Adapter<FieldsAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.content_keys_item, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.content_fields_item, parent, false)
         return ViewHolder(view)
     }
 
@@ -23,16 +23,16 @@ class FieldsAdapter(val context: Context, private var list: MutableList<FieldsMo
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        thread {
+
             var item = list[position]
-            holder.fieldName = item.fieldName
-            holder.checked = item.checked
-        }
+            holder.field.text = item.fieldName
+            holder.field.isChecked = item.checked
+
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var fieldName = itemView.swField.text
-        var checked = itemView.swField.isChecked
+        var field = itemView.swField
+        
     }
 
 }

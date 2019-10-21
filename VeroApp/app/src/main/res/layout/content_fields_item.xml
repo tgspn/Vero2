@@ -4,7 +4,6 @@
               android:layout_height="wrap_content">
 
     <Switch
-            android:text="Switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/swField" android:layout_weight="1"/>
 </LinearLayout>

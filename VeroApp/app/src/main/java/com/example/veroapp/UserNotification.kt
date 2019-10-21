@@ -19,8 +19,8 @@ import kotlin.concurrent.thread
 import kotlin.reflect.jvm.internal.impl.resolve.scopes.MemberScope
 
 class UserNotification : AppCompatActivity() {
-    val database: AppDatabase =  AppDatabase.getInstance(this)
-    var list= mutableListOf<FieldsModel>()
+    val database: AppDatabase = AppDatabase.getInstance(this)
+    var list = mutableListOf<FieldsModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_notification)
@@ -29,13 +29,13 @@ class UserNotification : AppCompatActivity() {
         val mapper = jacksonObjectMapper()
         val model = mapper.readValue<RequestUserModel>(modelText)
 
-        txtStoreName.text=model.storeName
+        txtStoreName.text = model.storeName
 
-            model.fields.forEach {
-            list.add(FieldsModel(it,false))
+        model.fields.forEach {
+            list.add(FieldsModel(it, true))
         }
-        lvFields.layoutManager= LinearLayoutManager(this)
-        lvFields.adapter=FieldsAdapter(this,list)
+        lvFields.layoutManager = LinearLayoutManager(this)
+        lvFields.adapter = FieldsAdapter(this, list)
         txtResult.text = "\t" + model.storeName + "\r\n\r\nCampos:\r\n\r\n" + TextUtils.join("\r\n", model.fields)
 
 //        thread {
@@ -47,13 +47,13 @@ class UserNotification : AppCompatActivity() {
             thread {
                 var resp = HashMap<String, String>()
                 var pessoaDao = database.pessoaDAO()
-               list.forEach {
+                list.forEach {
                     try {
-                        if(it.checked) {
+                        if (it.checked) {
                             var field = it.fieldName
                             var value = pessoaDao.get()
-                            //testar
-                            resp[field]=pessoaDao.getFieldValue(field)
+//                            //testar - não funcionou
+//                            resp[field] = pessoaDao.getFieldValue(field)
 
                             if (field == "endereco")
                                 resp[field] = value.endereco
@@ -84,7 +84,7 @@ class UserNotification : AppCompatActivity() {
 
         btnCancelar.setOnClickListener {
             thread {
-//                var database: AppDatabase
+                //                var database: AppDatabase
 //                database = AppDatabase.getInstance(this)
                 var pessoaDao = database.pessoaDAO()
                 val url = getString(R.string.server_endpoint) + "api/info/" + model.id
