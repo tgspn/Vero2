@@ -4,8 +4,10 @@ import android.arch.persistence.room.DatabaseConfiguration
 import android.arch.persistence.room.Room
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
 import com.example.veroapp.Database.AppDatabase
+import com.example.veroapp.adpters.FieldsAdapter
 import com.example.veroapp.models.RequestUserModel
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.convertValue
@@ -18,7 +20,7 @@ import kotlin.reflect.jvm.internal.impl.resolve.scopes.MemberScope
 
 class UserNotification : AppCompatActivity() {
     val database: AppDatabase =  AppDatabase.getInstance(this)
-
+    var list= mutableListOf<FieldsModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_notification)
@@ -28,6 +30,12 @@ class UserNotification : AppCompatActivity() {
         val model = mapper.readValue<RequestUserModel>(modelText)
 
         txtStoreName.text=model.storeName
+
+            model.fields.forEach {
+            list.add(FieldsModel(it,false))
+        }
+        lvFields.layoutManager= LinearLayoutManager(this)
+        lvFields.adapter=FieldsAdapter(this,list)
         txtResult.text = "\t" + model.storeName + "\r\n\r\nCampos:\r\n\r\n" + TextUtils.join("\r\n", model.fields)
 
 //        thread {
@@ -39,14 +47,19 @@ class UserNotification : AppCompatActivity() {
             thread {
                 var resp = HashMap<String, String>()
                 var pessoaDao = database.pessoaDAO()
-                model.fields.forEach {
+               list.forEach {
                     try {
-                        var field = it
-                        var value = pessoaDao.get()
-                        if (field == "endereco")
-                            resp[field] = value.endereco
-                        if (field == "nome")
-                            resp[field] = value.nome
+                        if(it.checked) {
+                            var field = it.fieldName
+                            var value = pessoaDao.get()
+                            //testar
+                            resp[field]=pessoaDao.getFieldValue(field)
+
+                            if (field == "endereco")
+                                resp[field] = value.endereco
+                            if (field == "nome")
+                                resp[field] = value.nome
+                        }
                     } catch (ex: Exception) {
                         ex.printStackTrace()
                     }
