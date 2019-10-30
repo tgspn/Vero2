@@ -25,14 +25,33 @@ class FieldsAdapter(val context: Context, private var list: MutableList<FieldsMo
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
             var item = list[position]
-            holder.field.text = item.fieldName
-            holder.field.isChecked = item.checked
+      //  holder.bind(item)
+        holder.checked=item.checked
+        holder.fieldName=item.fieldName
+//            holder.field.text = item.fieldName
+//            holder.field.isChecked = item.checked
 
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var field = itemView.swField
-        
+        var fieldName
+            get() = itemView.swField.text
+            set(value) {itemView.swField.text=value}
+
+        var checked
+            get() =itemView.swField.isChecked
+            set(value){itemView.swField.isChecked=value}
+
+        fun bind(ob: FieldsModel) {
+            itemView.swField.text=ob.fieldName
+            itemView.swField.isChecked=ob.checked
+
+        }
+
+//        var field = itemView.swField
+//            get()=
+
+
     }
 
 }

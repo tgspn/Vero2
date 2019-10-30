@@ -36,11 +36,11 @@ class UserNotification : AppCompatActivity() {
         }
         lvFields.layoutManager = LinearLayoutManager(this)
         lvFields.adapter = FieldsAdapter(this, list)
-        txtResult.text = "\t" + model.storeName + "\r\n\r\nCampos:\r\n\r\n" + TextUtils.join("\r\n", model.fields)
+//        txtResult.text = "\t" + model.storeName + "\r\n\r\nCampos:\r\n\r\n" + TextUtils.join("\r\n", model.fields)
 
 //        thread {
 //            database = AppDatabase.getInstance(this)
-//        }
+//        } 
 
 
         btnConfirmar.setOnClickListener {
