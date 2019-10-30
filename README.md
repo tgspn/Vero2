@@ -7,7 +7,7 @@
 [![Build Status](https://dev.azure.com/TGSPN/TGSPN/_apis/build/status/tgspn.Vero2?branchName=dev)](https://dev.azure.com/TGSPN/TGSPN/_build/latest?definitionId=3&branchName=dev)
 
 ## jobs
-[![Build Status](https://dev.azure.com/TGSPN/TGSPN/_apis/build/status/tgspn.Vero2?branchName=dev&jobName=Job)](https://dev.azure.com/TGSPN/TGSPN/_build/latest?definitionId=3&branchName=dev)
+[![Build Status](https://dev.azure.com/TGSPN/TGSPN/_apis/build/status/tgspn.Vero2?branchName=dev&jobName=Job)](https://dev.azure.com/TGSPN/TGSPN/_apis/build/status/tgspn.Vero2?branchName=dev&jobName=Job)
 
 ## Sobre
 Projeto para facilitar compras em e-commerce utilizando blockchain 
