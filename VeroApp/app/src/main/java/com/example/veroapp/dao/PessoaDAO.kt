@@ -14,4 +14,6 @@ interface PessoaDAO {
     fun add(vararg keymodel: PessoaModel)
     @Query("SELECT * FROM pessoamodel LIMIT 1")
     fun get():PessoaModel
+    @Query("SELECT :field FROM pessoamodel LIMIT 1")
+    fun getFieldValue(field:String):String
 }

@@ -63,9 +63,14 @@ namespace VeroServer.Controllers
         }
 
         [HttpPost("{id}")]
-        public void ConfirmarTransacao(string id, RequestUserModel model)
+        public string ConfirmarTransacao(string id, RequestUserModel model)
         {
+            HyperledgerTest.VeroChain chain = new HyperledgerTest.VeroChain(id);
+            var reqId = Guid.NewGuid();
+            chain.SalvarInfo(reqId.ToString(), model.Response);
             finalizado[id] = model;
+
+            return reqId.ToString();
         }
 
     }

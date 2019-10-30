@@ -33,14 +33,16 @@ class KeyManagerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_key_manager)
-        setSupportActionBar(toolbar)
+//        setSupportActionBar(toolbar)
         lvKeys.layoutManager = LinearLayoutManager(this)
 
         try {
             thread {
                 list=database.keyDAO().all().toMutableList()
                 adapter = KeysAdapter(this, list)
-                lvKeys.adapter = adapter
+                run {
+                    lvKeys.adapter = adapter
+                }
             }
 
 

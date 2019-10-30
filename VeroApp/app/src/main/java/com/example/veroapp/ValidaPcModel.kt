@@ -8,6 +8,5 @@ class ValidaPcModel(
     val ip:String="",
     val id:String="",//UUID.randomUUID()
     var publicKey: String = ""
-){
+){}
 
-}
