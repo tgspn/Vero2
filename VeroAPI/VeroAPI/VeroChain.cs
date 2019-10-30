@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using VeroAPI;
 
 namespace HyperledgerTest
 {
@@ -25,10 +26,10 @@ namespace HyperledgerTest
             client.UserContext = user;
 
             channel = client.NewChannel("mychannel");
-            var peer = client.NewPeer("p1", $"grpc://{Program.ServerIP}:7051");
+            var peer = client.NewPeer("p1", $"grpc://{Startup.HyperleaderServer}:7051");
             channel.AddPeer(peer);
 
-            var ordered = client.NewOrderer("o1", $"grpc://{Program.ServerIP}:7050");
+            var ordered = client.NewOrderer("o1", $"grpc://{Startup.HyperleaderServer}:7050");
             channel.AddOrderer(ordered);
 
             channel.Initialize();
@@ -47,7 +48,7 @@ namespace HyperledgerTest
                 //  return Newtonsoft.Json.JsonConvert.DeserializeObject<FabCarCollections>(System.Text.Encoding.UTF8.GetString(result[0].ChaincodeActionResponsePayload));
                 Console.WriteLine(result[0].TransactionID);
 
-                var eventHub = client.NewEventHub("event1", $"grpc://{Program.ServerIP}:7053");
+                var eventHub = client.NewEventHub("event1", $"grpc://{Startup.HyperleaderServer}:7053");
                 channel.AddEventHub(eventHub);
 
                 eventHub.ConnectAsync(result[0].TransactionContext).Wait();
