@@ -67,10 +67,10 @@ namespace VeroServer.Controllers
         {
             HyperledgerTest.VeroChain chain = new HyperledgerTest.VeroChain(id);
             var reqId = Guid.NewGuid();
-            chain.SalvarInfo(Guid.NewGuid().ToString(), model.Response);
+            chain.SalvarInfo(reqId.ToString(), model.Response);
             finalizado[id] = model;
 
-            return reqId;
+            return reqId.ToString();
         }
 
     }
