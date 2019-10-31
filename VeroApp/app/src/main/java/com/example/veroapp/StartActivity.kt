@@ -7,6 +7,7 @@ import android.os.Environment
 import android.support.design.widget.Snackbar
 import android.util.Log
 import com.example.veroapp.Database.AppDatabase
+import com.example.veroapp.models.PessoaModel
 import com.example.veroapp.models.WalletModel
 import kotlinx.android.synthetic.main.activity_start.*
 import java.io.File
@@ -50,6 +51,7 @@ class StartActivity : Activity() {
 
         val database: AppDatabase = AppDatabase.getInstance(this)
         database.walletDAO().add(WalletModel(wallet = wallet))
+        database.pessoaDAO().add(PessoaModel(0,"","","","",""))
 
         val fileName = applicationInfo.dataDir + "/" + "hfc-key-store"
         val file = File(fileName)

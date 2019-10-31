@@ -18,6 +18,7 @@ import android.preference.RingtonePreference
 import android.text.TextUtils
 import android.view.MenuItem
 import com.example.veroapp.Database.AppDatabase
+import com.example.veroapp.models.PessoaModel
 import kotlin.concurrent.thread
 
 /**
@@ -241,8 +242,11 @@ class CadastroActivity : AppCompatPreferenceActivity() {
 
                     thread {
                         val dao = database.pessoaDAO()
-                        val pessoa = dao.get()
-
+                        var pessoa = dao.get()
+                        if(pessoa==null) {
+                            database.pessoaDAO().add(PessoaModel(0, "", "", "", "", ""))
+                            pessoa = dao.get()
+                        }
                         if (preference.key == "nome")
                             pessoa.nome = stringValue
                         else if (preference.key == "dtNascimento")
