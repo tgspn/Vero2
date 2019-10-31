@@ -30,7 +30,7 @@ class UserNotification : AppCompatActivity() {
         val model = mapper.readValue<RequestUserModel>(modelText)
 
         txtStoreName.text = model.storeName
-
+        txtValor.text=model.value.toString( )
         model.fields.forEach {
             list.add(FieldsModel(it, true))
         }
@@ -58,8 +58,30 @@ class UserNotification : AppCompatActivity() {
 
                             if (field == "endereco")
                                 resp[field] = value.endereco
-                            if (field == "nome")
+                            else if(field=="rua")
+                                resp[field] = value.rua
+                            else if(field=="cidade")
+                                resp[field] = value.cidade
+                            else if(field=="bairro")
+                                resp[field] = value.bairro
+                            else if(field=="estado")
+                                resp[field] = value.estado
+                            else if(field=="pais")
+                                resp[field] = value.pais
+                            else if(field=="numero")
+                                resp[field] = value.numero
+                            else if(field=="cpf")
+                                resp[field] = value.CPF
+                            else if(field=="rg")
+                                resp[field] = value.RG
+                            else if(field=="data_nascimeto")
+                                resp[field] = value.data_nascimeto
+                            else if(field=="email")
+                                resp[field] = value.email
+                            else if (field == "nome")
                                 resp[field] = value.nome
+                            else if(field=="telefone")
+                                resp[field] = value.telefone
                         }
                     } catch (ex: Exception) {
                         ex.printStackTrace()

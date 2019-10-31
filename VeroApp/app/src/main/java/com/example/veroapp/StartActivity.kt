@@ -51,7 +51,7 @@ class StartActivity : Activity() {
 
         val database: AppDatabase = AppDatabase.getInstance(this)
         database.walletDAO().add(WalletModel(wallet = wallet))
-        database.pessoaDAO().add(PessoaModel(0,"","","","",""))
+//        database.pessoaDAO().add(PessoaModel(0,"","","","",""))
 
         val fileName = applicationInfo.dataDir + "/" + "hfc-key-store"
         val file = File(fileName)

@@ -2,27 +2,26 @@
 
 
     <EditTextPreference
-            android:defaultValue="Default value"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="Rua" android:key="rua"/>
     <EditTextPreference
-            android:defaultValue="Default value"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Número" android:key="numero"/>
+    <EditTextPreference
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="Bairro" android:key="bairro"/>
     <EditTextPreference
-            android:defaultValue="Default value"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="Cidade" android:key="cidade"/>
     <EditTextPreference
-            android:defaultValue="Default value"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="Estado" android:key="estado"/>
     <EditTextPreference
-            android:defaultValue="Default value"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="País" android:key="pais"/>

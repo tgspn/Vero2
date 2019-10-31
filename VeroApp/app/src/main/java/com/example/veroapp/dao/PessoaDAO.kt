@@ -13,6 +13,8 @@ interface PessoaDAO {
     fun all(): List<PessoaModel>
     @Insert
     fun add(vararg keymodel: PessoaModel)
+    @Insert
+    fun createEmpty(pessoa:PessoaModel=PessoaModel(0, "", "", "", "", "","","","","","","",""))
     @Query("SELECT * FROM pessoamodel LIMIT 1")
     fun get():PessoaModel
     @Update

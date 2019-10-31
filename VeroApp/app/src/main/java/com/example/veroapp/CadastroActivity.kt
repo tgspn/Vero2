@@ -91,6 +91,7 @@ class CadastroActivity : AppCompatPreferenceActivity() {
             bindPreferenceSummaryToValue(findPreference("rg"))
             bindPreferenceSummaryToValue(findPreference("cpf"))
             bindPreferenceSummaryToValue(findPreference("dtNascimento"))
+            bindPreferenceSummaryToValue(findPreference("email"))
         }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -118,6 +119,7 @@ class CadastroActivity : AppCompatPreferenceActivity() {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("rua"))
+            bindPreferenceSummaryToValue(findPreference("numero"))
             bindPreferenceSummaryToValue(findPreference("bairro"))
             bindPreferenceSummaryToValue(findPreference("estado"))
             bindPreferenceSummaryToValue(findPreference("pais"))
@@ -244,7 +246,7 @@ class CadastroActivity : AppCompatPreferenceActivity() {
                         val dao = database.pessoaDAO()
                         var pessoa = dao.get()
                         if(pessoa==null) {
-                            database.pessoaDAO().add(PessoaModel(0, "", "", "", "", ""))
+                            database.pessoaDAO().createEmpty()
                             pessoa = dao.get()
                         }
                         if (preference.key == "nome")
@@ -255,8 +257,22 @@ class CadastroActivity : AppCompatPreferenceActivity() {
                             pessoa.CPF = stringValue
                         else if (preference.key == "rg")
                             pessoa.RG = stringValue
-                        else if (preference.key == "")
-                            pessoa.endereco = stringValue
+                        else if (preference.key == "rua")
+                            pessoa.rua = stringValue
+                        else if (preference.key == "numero")
+                            pessoa.numero = stringValue
+                        else if (preference.key == "bairro")
+                            pessoa.bairro = stringValue
+                        else if (preference.key == "cidade")
+                            pessoa.cidade = stringValue
+                        else if (preference.key == "estado")
+                            pessoa.estado = stringValue
+                        else if (preference.key == "pais")
+                            pessoa.pais = stringValue
+                        else if (preference.key == "email")
+                            pessoa.email = stringValue
+                        else if (preference.key == "telefone")
+                            pessoa.telefone = stringValue
 
                         dao.update(pessoa)
                     }
