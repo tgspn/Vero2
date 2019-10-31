@@ -11,7 +11,7 @@ import com.example.veroapp.models.KeyModel
 import com.example.veroapp.models.PessoaModel
 import com.example.veroapp.models.WalletModel
 
-@Database(entities=[KeyModel::class,PessoaModel::class,WalletModel::class],version = 2,exportSchema = false )
+@Database(entities=[KeyModel::class,PessoaModel::class,WalletModel::class],version = 3,exportSchema = false )
  abstract class AppDatabase() : RoomDatabase() {
 
     abstract fun keyDAO(): KeyDAO
