@@ -237,7 +237,7 @@ class CadastroActivity : AppCompatPreferenceActivity() {
             } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
-                if (preference.shouldCommit()) {
+                if (preference.shouldCommit() && stringValue!= null) {
 
                     thread {
                         val dao = database.pessoaDAO()

@@ -51,8 +51,9 @@ namespace VeroAPI.Controllers
                             SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None,
                             Secure = false,
                             Expires=DateTime.Now.AddYears(100),
-                            IsEssential=true
+                            IsEssential=true                            
                         };
+                        Response.Cookies.Delete("pkey");
                         Response.Cookies.Append("pkey", value, options);
                     }
                     return value;

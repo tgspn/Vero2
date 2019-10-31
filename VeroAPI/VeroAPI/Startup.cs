@@ -68,10 +68,10 @@ namespace VeroAPI
                 app.UseHsts();
             }
             app.UseCors(MyAllowSpecificOrigins);
-            app.UseCors(options =>
-            {
-                options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials();
-            });
+            //app.UseCors(options =>
+            //{
+            //    options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+            //});
             
             app.UseHttpsRedirection();
             app.UseMvc();

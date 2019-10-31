@@ -13,6 +13,7 @@
       url: "http://hyper.in:8079/api/info",
       method: "Post",
       contentType: "application/json",
+      crossDomain: true,
       xhrFields: {
         withCredentials: true
       },
@@ -23,9 +24,12 @@
         Value: 100.00
       }
       ),
-      success: (d) => {
-        $("#name").val(d["nome"])
-        $("#endereco").val(d["endereco"])
+      success: (d, Status, jqXHR) => {
+        if (jqXHR.status == 200) {
+          waitResult()
+        } else {
+          alert("O servidor retornou um erro");
+        }
       },
       error: (e) => {
         console.log(e)
@@ -34,4 +38,31 @@
     })
   })
 
+  function waitResult() {
+    let timer = setInterval(() => {
+      $.ajax({
+        url: "http://hyper.in:8079/api/info/",
+        method: "Get",
+        contentType: "application/json",
+        crossDomain: true,
+        xhrFields: {
+          withCredentials: true
+        },
+        success: (d, Status, jqXHR) => {
+          if (jqXHR.status == 200) {
+            $("#name").val(d["nome"])
+            $("#endereco").val(d["endereco"])
+            clearInterval(timer)
+          } else if (jqXHR.status == 406) {
+            alert("As informações não foram autorizadas a ser compartilhadas");
+            clearInterval(timer)
+          }
+        },
+        error: (e) => {
+          console.log(e)
+          clearInterval(timer)
+        }
+      });
+    }, 1000);
+  }
 </script>

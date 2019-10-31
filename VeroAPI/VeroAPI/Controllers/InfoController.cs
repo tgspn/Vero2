@@ -15,40 +15,56 @@ namespace VeroServer.Controllers
         private static Dictionary<string, RequestUserModel> aguardando = new Dictionary<string, RequestUserModel>();
         private static Dictionary<string, RequestUserModel> finalizado = new Dictionary<string, RequestUserModel>();
         [HttpPost]
-        public async Task<Dictionary<string, string>> RequestUser(RequestUserModel model)
+        public ActionResult/*Task<Dictionary<string, string>>*/ RequestUser(RequestUserModel model)
         {
             if (!Request.Cookies.ContainsKey("pkey"))
-                throw new Exception("o cookie não foi encontrado");// StatusCode(StatusCodes.Status401Unauthorized);
+                return StatusCode(StatusCodes.Status401Unauthorized); //throw new Exception("o cookie não foi encontrado");// 
 
             var id = Request.Cookies["pkey"].ToString();
             if (string.IsNullOrEmpty(id))
-                throw new Exception("O id não enviado");
+                return StatusCode(StatusCodes.Status401Unauthorized);//throw new Exception("O id não enviado");
 
             model.Id = id;//"5Kb8kLf9zgWQnogidDA76Mz_SAMPLE_PRIVATE_KEY_DO_NOT_IMPORT_PL6TsZZY36hWXMssSzNydYXYB9KF";
             aguardando[model.Id] = model;
-            return await Task.Run(() =>
+            return Ok();
+            //return await Task.Run(() =>
+            //{
+            //    while (true)
+            //    {
+            //        if (finalizado.ContainsKey(model.Id))
+            //        {
+            //            var m = finalizado[model.Id];
+            //            finalizado.Remove(model.Id);
+            //            return m.Response;
+            //        }
+
+            //        Task.Delay(1000);
+            //    }
+            //});
+
+
+        }
+        [HttpGet()]
+        public ActionResult<Dictionary<string, string>> Result()
+        {
+            var id = Request.Cookies["pkey"].ToString();
+            if (finalizado.ContainsKey(id))
             {
-                while (true)
-                {
-                    if (finalizado.ContainsKey(model.Id))
-                    {
-                        var m = finalizado[model.Id];
-                        finalizado.Remove(model.Id);
-                        return m.Response;
-                    }
+                var m = finalizado[id];
+                finalizado.Remove(id);
+                if (m.Response.Count ==0)
+                    return StatusCode(StatusCodes.Status406NotAcceptable);
 
-                    Task.Delay(1000);
-                }
-            });
-
-
+                return Ok(m.Response);
+            }
+            return NoContent();
         }
         [HttpOptions]
         public ActionResult Options()
         {
             return Ok();
         }
-        [HttpGet("{id}")]
+        [HttpGet("{id}",Name ="getUser")]
         public RequestUserModel CheckUser(string id)
         {
 
@@ -65,11 +81,22 @@ namespace VeroServer.Controllers
         [HttpPost("{id}")]
         public string ConfirmarTransacao(string id, RequestUserModel model)
         {
-            HyperledgerTest.VeroChain chain = new HyperledgerTest.VeroChain(id);
             var reqId = Guid.NewGuid();
-            chain.SalvarInfo(reqId.ToString(), model.Response);
-            finalizado[id] = model;
+            try
+            {
+                HyperledgerTest.VeroChain chain = new HyperledgerTest.VeroChain(id);
 
+                chain.SalvarInfo(reqId.ToString(), model.Response);
+                finalizado[model.Id] = model;
+            }
+            catch (Exception ex)
+            {
+                model.Response?.Clear();
+            }
+            finally
+            {
+                finalizado[model.Id] = model;
+            }
             return reqId.ToString();
         }
 

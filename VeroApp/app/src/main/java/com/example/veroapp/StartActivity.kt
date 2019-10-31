@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.design.widget.Snackbar
 import android.util.Log
+import com.example.veroapp.Database.AppDatabase
+import com.example.veroapp.models.WalletModel
 import kotlinx.android.synthetic.main.activity_start.*
 import java.io.File
 import java.net.HttpURLConnection
@@ -45,6 +47,9 @@ class StartActivity : Activity() {
         val response = khttp.post(url)
         val wallet: String = response.headers!!["w-user"]!!
         val zipFile: ByteArray = response.content
+
+        val database: AppDatabase = AppDatabase.getInstance(this)
+        database.walletDAO().add(WalletModel(wallet = wallet))
 
         val fileName = applicationInfo.dataDir + "/" + "hfc-key-store"
         val file = File(fileName)

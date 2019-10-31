@@ -3,11 +3,11 @@ let lpkey = document.getElementById('pkey');
 let dpkey = document.getElementById('dpkey');
 let dqrCode = document.getElementById('dqrCode');
 
-const serverUrl = "http://hyper.in:8079/api/Validate/";
+const serverUrl = "http://hyper.in:8079/api/Validate";
 
 
 window.onload = () => {
-  console.log('abriu')
+  // console.log('abriu')
   $.ajax({
     url: serverUrl,
     success: (data) => {
@@ -35,7 +35,7 @@ function waitingResponse(id) {
           clearInterval(interval)
           console.log(data)
           windows.close()
-          // setCookie("pkey", data, 365)
+          setCookie("pkey", data, 365)
           // chrome.storage.sync.set({ configuracao: { pkey: data } }, () => { setCookie("pkey", data, 365) });
         } else {
           console.log("sem data")
@@ -56,9 +56,9 @@ chrome.storage.sync.get('configuracao', (data) => {
   }
 });
 
-var d = new Date();
-d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-var expires = "expires=" + d.toUTCString();
+// var d = new Date();
+// d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+// var expires = "expires=" + d.toUTCString();
 function setCookie(cname, cvalue, exdays) {
 
   var d = new Date();

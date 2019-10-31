@@ -47,6 +47,7 @@ class UserNotification : AppCompatActivity() {
             thread {
                 var resp = HashMap<String, String>()
                 var pessoaDao = database.pessoaDAO()
+                var walletDao=database.walletDAO()
                 list.forEach {
                     try {
                         if (it.checked) {
@@ -65,7 +66,7 @@ class UserNotification : AppCompatActivity() {
                     }
                 }
                 model.response = resp
-                val url = getString(R.string.server_endpoint) + "api/info/" + model.id
+                val url = getString(R.string.server_endpoint) + "api/info/" + walletDao.get().wallet
                 try {
                     var header = HashMap<String, String>()
                     header["Content-Type"] = "application/json"
