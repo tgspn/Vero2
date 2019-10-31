@@ -29,7 +29,7 @@
         <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
+                <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -52,7 +52,7 @@
                 android:name=".KeyManagerActivity"
                 android:label="@string/title_activity_key_manager"
                 android:parentActivityName=".MainActivity"
-                android:theme="@style/AppTheme.NoActionBar">
+                >
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.example.veroapp.MainActivity"/>
