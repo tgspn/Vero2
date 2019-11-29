@@ -17,6 +17,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.android.synthetic.main.content_key_manager.*
 import java.util.*
 import java.util.logging.Handler
+import kotlin.collections.HashMap
 import kotlin.concurrent.thread
 import kotlin.concurrent.timerTask
 
@@ -45,7 +46,8 @@ class CheckNotification : JobService() {
             thread {
                 database.keyDAO().all().forEach {
                     val url = getString(R.string.server_endpoint) + "api/info/" + it.id
-
+//                    var header=HashMap<String,String>()
+//                    header.put("Origin","https://54.159.123.153:4433")
                     val response = khttp.get(url)
                     if (response.statusCode == 200 && response.text != null) {
                         try {
