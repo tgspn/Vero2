@@ -44,20 +44,24 @@ namespace VeroServer.Controllers
 
 
         }
+        readonly object result = new object();
         [HttpGet()]
         public ActionResult<Dictionary<string, string>> Result()
         {
-            var id = Request.Cookies["pkey"].ToString();
-            if (finalizado.ContainsKey(id))
+            lock (result)
             {
-                var m = finalizado[id];
-                finalizado.Remove(id);
-                if (m.Response.Count ==0)
-                    return StatusCode(StatusCodes.Status406NotAcceptable);
+                var id = Request.Cookies["pkey"].ToString();
+                if (finalizado.ContainsKey(id))
+                {
+                    var m = finalizado[id];
+                    finalizado.Remove(id);
+                    if (m.Response.Count == 0)
+                        return StatusCode(StatusCodes.Status406NotAcceptable);
 
-                return Ok(m.Response);
+                    return Ok(m.Response);
+                }
+                return NoContent();
             }
-            return NoContent();
         }
         [HttpOptions]
         public ActionResult Options()
@@ -77,28 +81,32 @@ namespace VeroServer.Controllers
             else
                 return null;
         }
+        readonly object confirmar = new object();
 
         [HttpPost("{id}")]
         public string ConfirmarTransacao(string id, RequestUserModel model)
         {
-            var reqId = Guid.NewGuid();
-            try
+            lock (confirmar)
             {
-                HyperledgerTest.VeroChain chain = new HyperledgerTest.VeroChain(id);
+                var reqId = Guid.NewGuid();
+                try
+                {
+                    HyperledgerTest.VeroChain chain = new HyperledgerTest.VeroChain(id);
 
-                chain.SalvarInfo(reqId.ToString(), model.Response);
-                finalizado[model.Id] = model;
+                    chain.SalvarInfo(reqId.ToString(), model.Response);
+                    finalizado[model.Id] = model;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    model.Response?.Clear();
+                }
+                finally
+                {
+                    finalizado[model.Id] = model;
+                }
+                return reqId.ToString();
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                model.Response?.Clear();
-            }
-            finally
-            {
-                finalizado[model.Id] = model;
-            }
-            return reqId.ToString();
         }
 
     }
