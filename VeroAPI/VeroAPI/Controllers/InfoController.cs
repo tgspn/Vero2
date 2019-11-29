@@ -68,7 +68,7 @@ namespace VeroServer.Controllers
         {
             return Ok();
         }
-        [HttpGet("{id}",Name ="getUser")]
+        [HttpGet("{id}", Name = "getUser")]
         public RequestUserModel CheckUser(string id)
         {
 
@@ -84,33 +84,32 @@ namespace VeroServer.Controllers
         readonly object confirmar = new object();
 
         [HttpPost("{id}")]
-        public string ConfirmarTransacao(string id, RequestUserModel model)
+        public async Task<string> ConfirmarTransacao(string id, RequestUserModel model)
         {
-            lock (confirmar)
+
+            var reqId = Guid.NewGuid();
+            try
             {
-                var reqId = Guid.NewGuid();
+                HyperledgerTest.VeroChain chain = new HyperledgerTest.VeroChain(id);
                 try
                 {
-                    HyperledgerTest.VeroChain chain = new HyperledgerTest.VeroChain(id);
-                    try
-                    {
-                        chain.SalvarInfo(reqId.ToString(), model.Response);
-                    }
-                    catch { }
-                    //finalizado[model.Id] = model;
+                    await chain.SalvarInfo(reqId.ToString(), model.Response);
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                    //model.Response?.Clear();
-                    
-                }
-                finally
-                {
-                    finalizado[model.Id] = model;
-                }
-                return reqId.ToString();
+                catch { }
+                //finalizado[model.Id] = model;
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                //model.Response?.Clear();
+
+            }
+            finally
+            {
+                finalizado[model.Id] = model;
+            }
+            return reqId.ToString();
+
         }
 
     }

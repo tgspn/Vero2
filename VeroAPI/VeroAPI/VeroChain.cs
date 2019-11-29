@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using VeroAPI;
 
 namespace HyperledgerTest
@@ -35,7 +36,7 @@ namespace HyperledgerTest
             channel.Initialize();
         }
 
-        public void SalvarInfo(string id, Dictionary<string, string> vero)
+        public async Task SalvarInfo(string id, Dictionary<string, string> vero)
         {
             var tx_id = client.NewTransactionProposalRequest();
             tx_id.Args = new List<string>() { id, Newtonsoft.Json.JsonConvert.SerializeObject(vero) };
@@ -51,7 +52,7 @@ namespace HyperledgerTest
                 var eventHub = client.NewEventHub("event1", $"grpc://{Startup.HyperleaderServer}:7053");
                 channel.AddEventHub(eventHub);
 
-                eventHub.ConnectAsync(result[0].TransactionContext).Wait();
+                await eventHub.ConnectAsync(result[0].TransactionContext);
                 var result2 = channel.SendTransaction(result);
                 while (true)
                 {
