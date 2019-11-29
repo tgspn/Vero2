@@ -91,6 +91,7 @@ namespace VeroServer.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 model.Response?.Clear();
             }
             finally
