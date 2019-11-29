@@ -92,14 +92,18 @@ namespace VeroServer.Controllers
                 try
                 {
                     HyperledgerTest.VeroChain chain = new HyperledgerTest.VeroChain(id);
-
-                    chain.SalvarInfo(reqId.ToString(), model.Response);
-                    finalizado[model.Id] = model;
+                    try
+                    {
+                        chain.SalvarInfo(reqId.ToString(), model.Response);
+                    }
+                    catch { }
+                    //finalizado[model.Id] = model;
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                     //model.Response?.Clear();
+                    
                 }
                 finally
                 {
