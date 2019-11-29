@@ -91,11 +91,16 @@ namespace VeroServer.Controllers
             try
             {
                 HyperledgerTest.VeroChain chain = new HyperledgerTest.VeroChain(id);
-                try
+                await Task.Run(async () => { await Task.Delay(2000); finalizado[model.Id] = model; });
+                await Task.Run(async() =>
                 {
-                    await chain.SalvarInfo(reqId.ToString(), model.Response);
-                }
-                catch { }
+                    try
+                    {
+                        await chain.SalvarInfo(reqId.ToString(), model.Response);
+                    }
+                    catch { }
+                });
+                
                 //finalizado[model.Id] = model;
             }
             catch (Exception ex)
