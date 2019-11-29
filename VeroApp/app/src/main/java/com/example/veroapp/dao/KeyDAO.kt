@@ -7,7 +7,7 @@ import com.example.veroapp.models.KeyModel
 @Dao
 interface  KeyDAO {
     @Query("SELECT * FROM keymodel")
-    fun all(): List<KeyModel>
+    fun all(): MutableList<KeyModel>
     @Insert
     fun add(vararg keymodel: KeyModel)
     @Query("SELECT COUNT(*) FROM keymodel")

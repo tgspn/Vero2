@@ -1,0 +1,524 @@
+(function () {
+
+  /**
+   * Global variables
+   */
+  var start = new Date().getTime();
+
+  /**
+   * Helper Funcions
+   */
+  var getRequest = function () {
+    if (window.XMLHttpRequest) {
+      return new window.XMLHttpRequest;
+    } else {
+      try {
+        return new window.ActiveXObject('MSXML2.XMLHTTP.3.0');
+      } catch (e) {
+      }
+    }
+    throw new Error('no xmlhttp request able to be created');
+  }
+
+  var setDefault = function (obj, key, value) {
+    obj[key] = obj[key] || value;
+  }
+
+  var ajax = function (params, callback) {
+    if (typeof params == 'string') {
+      params = {url: params};
+    }
+
+    var headers = params.headers || {};
+    var body = params.body;
+    var method = params.method || (body ? 'POST' : 'GET');
+    var withCredentials = params.withCredentials || false;
+    var req = getRequest();
+
+    req.onreadystatechange = function () {
+      if (req.readyState == 4 && callback) {
+        callback(req.status, req.responseText, req);
+      }
+    }
+
+    if (body) {
+      // backend server without X-Requested-With
+      // setDefault(headers, 'X-Requested-With', 'XMLHttpRequest');
+      setDefault(headers, 'Content-Type', 'application/x-www-form-urlencoded');
+    }
+
+    req.open(method, params.url, true);
+
+    // has no effect in IE
+    // has no effect for same-origin requests
+    // has no effect in CORS if user has disabled 3rd party cookies
+    req.withCredentials = withCredentials;
+
+    for (var field in headers) {
+      req.setRequestHeader(field, headers[field]);
+    }
+
+    req.send(body);
+  }
+
+  // From https://developer.mozilla.org/en-US/docs/Web/API/document.cookie
+  var docCookies = {
+    getItem: function (sKey) {
+      if (!sKey) {
+        return null;
+      }
+      var value = null;
+      try {
+        value = decodeURIComponent(window.top.document.cookie.replace(
+                new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(sKey)
+                    + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+      } catch (e) {
+      }
+      return value;
+    },
+    setItem: function (sKey, sValue, vEnd, sPath, sDomain, bSecure) {
+      if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) {
+        return false;
+      }
+      var sExpires = "";
+      if (vEnd) {
+        switch (vEnd.constructor) {
+          case Number:
+            sExpires = vEnd === Infinity
+                ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age="
+                + vEnd;
+            break;
+          case String:
+            sExpires = "; expires=" + vEnd;
+            break;
+          case Date:
+            sExpires = "; expires=" + vEnd.toUTCString();
+            break;
+        }
+      }
+      document.cookie = encodeURIComponent(sKey) + "=" + encodeURIComponent(
+              sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "")
+          + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
+      return true;
+    },
+  };
+
+  /**
+   * Main
+   */
+  var send = function (data, area, eventName, callback) {
+    return ajax({
+      method: 'POST',
+      url: 'https://v2datalakeb2wio-a.akamaihd.net/send-data/' + area + '/'
+      + eventName,
+      body: JSON.stringify(data)
+    }, function (statusCode, response) {
+      if (callback) {
+        callback(statusCode, response);
+      }
+    });
+  }
+
+  var collect_performance_data = function (browser) {
+    // TODO: ask for performance on browser variable
+    var d = {};
+    try {
+      if (window.top.performance != null) {
+        var t = window.top.performance.timing;
+        var n = window.top.performance.navigation;
+
+        if (t.connectEnd > 0 && t.connectStart > 0) {
+          d["prf_tcp_time"] = t.connectEnd - t.connectStart;
+        }
+        if (t.domainLookupEnd > 0 && t.domainLookupStart > 0) {
+          d["prf_dns_time"] = t.domainLookupEnd - t.domainLookupStart;
+        }
+        if (t.loadEventEnd > 0 && t.navigationStart > 0) {
+          d["prf_page_load_time"] = t.loadEventEnd - t.navigationStart;
+          d["prf_processing_time"] = t.loadEventEnd - t.domLoading
+        }
+      } else {
+        now = new Date().getTime();
+        var processing_time = now - start;
+        d["prf_processing_time"] = processing_time;
+      }
+    } catch (e) {
+      // TODO: handle errors
+    }
+
+    return d;
+  }
+
+  var load_basic_data = function (browser) {
+    var data = collect_performance_data(browser);
+
+    data["nvg_location"] = window.top.document.location.href || "";
+    data["nvg_referrer"] = window.top.document.referrer || "";
+    data["nvg_uri"] = window.top.document.location.pathname || "";
+    data['nvg_brand'] = window.top.document.location.hostname || "";
+    data["nvg_user"] = docCookies.getItem("customer.id") || "";
+    data["nvg_b2wsid"] = docCookies.getItem("B2W-SID") || "";
+    data["nvg_b2wuid"] = docCookies.getItem("B2W-UID") || "";
+    data["nvg_searchTestAB"] = docCookies.getItem("searchTestAB") || "";
+
+    data["dvc_lang"] = window.navigator.userLanguage
+        || window.navigator.language || "";
+    data["dvc_screen_width"] = screen.width;
+    data["dvc_screen_height"] = screen.height;
+    data["dvc_browser_time"] = new Date();
+    if (navigator) {
+      data["dvc_user_agent"] = navigator.userAgent || "";
+      data["dvc_platform"] = navigator.platform || "";
+    }
+
+    // Get the "epar" cookie by default
+    data["epar"] = docCookies.getItem("b2wEPar");
+
+    return data;
+  }
+
+  var load_buybox_data = function (dataLayerBbox) {
+    var sellersInfo = [];
+    if (dataLayerBbox) {
+      for (var i = 0; i < dataLayerBbox.length; i++) {
+        dataLayerSeller = dataLayerBbox[i];
+        sellerInfo = {
+          "objPartnerID": dataLayerSeller["partnerId"],
+          "objPartnerName": dataLayerSeller["partnerName"],
+          "objPartnerPrice": dataLayerSeller["partnerPrice"],
+          "objPartnerPosition": dataLayerSeller["position"]
+        };
+        sellersInfo.push(sellerInfo);
+      }
+    }
+    return sellersInfo;
+  }
+
+  document.addEventListener('product:load', function (event) {
+    var detail = event.detail;
+    var dataLayer = {};
+    if (detail.page.dataLayer && detail.page.dataLayer[0]) {
+      dataLayer = detail.page.dataLayer[0];
+      if (detail.page.dataLayer[1]) {
+        dataLayerBbox = detail.page.dataLayer[1];
+      }
+    }
+
+    var data = load_basic_data(detail.browser);
+    var dataLayerVars = ['objAvaliacaoProduto',
+      'objBreadCrumb',
+      'objDepartamento',
+      'objDiponibilidadeProd',
+      'objIDMktPlace',
+      'objIdProd',
+      'objLinha',
+      'objNomeProd',
+      'objMktPlace',
+      'objPrecoProd',
+      'objSKUsProduto',
+      'objSubLinha',
+      'objSubLoja',
+      'objTipoDePagina'];
+    var totalVars = dataLayerVars.length;
+
+    for (var i = 0; i < totalVars; i++) {
+      data['prd_' + dataLayerVars[i]] = dataLayer[dataLayerVars[i]] || "";
+    }
+
+    var testingData = {};
+    var isBboxABTesting = docCookies.getItem("mmcore.SBCookieT40") != null;
+    var sbt40Test = {};
+    sbt40Test['active'] = isBboxABTesting;
+    var alternative = docCookies.getItem("TesteAPI") ? docCookies.getItem(
+            "TesteAPI") : "controle";
+    sbt40Test['alternative'] = alternative
+    testingData['sbt40Test'] = sbt40Test;
+    data['tst_data'] = testingData;
+    try {
+      data['bbx_data'] = load_buybox_data(dataLayerBbox);
+    } catch (err) {
+      //do not break the main execution flow
+      //TODO - send a log to same place
+    }
+    send(data, "product-staging", "load");
+
+    return true;
+  });
+
+  document.addEventListener('dtm:search:load', function (event) {
+    var detail = event.detail;
+    var dataLayer = {};
+    if (detail.page.dataLayer && detail.page.dataLayer[0]) {
+      dataLayer = detail.page.dataLayer[0];
+    }
+    var data = load_basic_data(detail.browser);
+    var dataLayerVars = ['ObjPosicaoBusca',
+      'ObjTipoDeBusca',
+      'objPageName',
+      'objQuantResults',
+      'objTextoBusca'
+    ];
+    var totalVars = dataLayerVars.length;
+
+    for (var i = 0; i < totalVars; i++) {
+      data['search_' + dataLayerVars[i]] = dataLayer[dataLayerVars[i]] || "";
+    }
+
+    send(data, "search-staging", "load");
+
+    return true;
+  });
+
+  document.addEventListener('category:load', function (event) {
+    var detail = event.detail;
+    var dataLayer = {};
+    if (detail.page.dataLayer && detail.page.dataLayer[0]) {
+      dataLayer = detail.page.dataLayer[0];
+    }
+    var data = load_basic_data(detail.browser);
+    var dataLayerVars = ['objBreadCrumb',
+      'objDepartamento',
+      'objLinha',
+      'objSubLinha',
+      'objSublinhaLevel2',
+      'objSublinhaLevel3',
+      'objTipoDePagina',
+      'objVersaoDoSite'
+    ];
+
+    var totalVars = dataLayerVars.length;
+
+    for (var i = 0; i < totalVars; i++) {
+      data['category_' + dataLayerVars[i]] = dataLayer[dataLayerVars[i]] || "";
+    }
+
+    send(data, "category-staging", "load");
+
+    return true;
+  });
+
+  document.addEventListener('freight:calculate', function (event) {
+      let freightData = event.detail.freight;
+      send(freightData, "freight", "calculate");
+  });
+
+   document.addEventListener('freight:calculate-info', function (event) {
+      let freightData = event.detail;
+      send(freightData, "freight", "ckt-calculate");
+  });
+
+  document.addEventListener('page:load', function (event) {
+    var detail = event.detail;
+
+    if (detail.page.type == "product") {
+      var data = load_basic_data(detail);
+
+      if ("product" in detail && "category" in detail.product && "breadcrumb"
+          in detail.product.category) {
+        var breadcrumb = "";
+        var total_breadcrumb = detail.product.category.breadcrumb.length;
+        for (var i = 0; i < total_breadcrumb; i++) {
+          breadcrumb = breadcrumb + detail.product.category.breadcrumb[i].name
+              + " > ";
+        }
+      }
+
+      data["prd_objbreadcrumb"] = breadcrumb.slice(0, -3);
+
+      data["prd_objavaliacaoproduto"] = (("product" in detail && "rating"
+      in detail.product && "average" in detail.product.rating)
+          ? detail.product.rating.average : "");
+
+      data["prd_objidprod"] = (("product" in detail && "id" in detail.product)
+          ? detail.product.id : "");
+      data["prd_objnomeprod"] = (("product" in detail && "name"
+      in detail.product) ? detail.product.name : "");
+      data["prd_objprecoprod"] = (("offers" in detail && detail.offers.length
+      > 0 && "salesPrice" in detail.offers[0]) ? detail.offers[0].salesPrice
+          : "");
+
+      if (detail.product.isFashionItem == false) {
+        data["prd_objdepartamento"] = (("product" in detail && "category"
+        in detail.product && "breadcrumb" in detail.product.category
+        && detail.product.category.breadcrumb.length > 0)
+            ? detail.product.category.breadcrumb[detail.product.category.breadcrumb.length
+            - 1].id : "");
+        data["prd_objlinha"] = (("product" in detail && "category"
+        in detail.product && "breadcrumb" in detail.product.category
+        && detail.product.category.breadcrumb.length > 1)
+            ? detail.product.category.breadcrumb[detail.product.category.breadcrumb.length
+            - 2].id : "");
+        data["prd_objsublinha"] = (("product" in detail && "category"
+        in detail.product && "breadcrumb" in detail.product.category
+        && detail.product.category.breadcrumb.length > 2)
+            ? detail.product.category.breadcrumb[detail.product.category.breadcrumb.length
+            - 3].id : "");
+        data["prd_objsubloja"] = null;
+      } else {
+        data["prd_objdepartamento"] = (("product" in detail && "category"
+        in detail.product && "breadcrumb" in detail.product.category
+        && detail.product.category.breadcrumb.length > 0)
+            ? detail.product.category.breadcrumb[detail.product.category.breadcrumb.length
+            - 1].id : "");
+        data["prd_objlinha"] = (("product" in detail && "category"
+        in detail.product && "breadcrumb" in detail.product.category
+        && detail.product.category.breadcrumb.length > 2)
+            ? detail.product.category.breadcrumb[detail.product.category.breadcrumb.length
+            - 3].id : "");
+        data["prd_objsublinha"] = (("product" in detail && "category"
+        in detail.product && "breadcrumb" in detail.product.category
+        && detail.product.category.breadcrumb.length > 3)
+            ? detail.product.category.breadcrumb[detail.product.category.breadcrumb.length
+            - 4].id : "");
+        data["prd_objsubloja"] = (("product" in detail && "category"
+        in detail.product && "breadcrumb" in detail.product.category
+        && detail.product.category.breadcrumb.length > 1)
+            ? detail.product.category.breadcrumb[detail.product.category.breadcrumb.length
+            - 2].id : "");
+        ;
+      }
+
+      if (detail.offers.length > 0) {
+        data["prd_objdiponibilidadeprod"] = (("offers" in detail
+        && detail.offers.length > 1 || detail.offers[0]._embedded.seller.name
+        != "B2W") ? "sim" : "nao");
+      }
+
+      if (detail.buyboxToken && detail.buyboxToken != '') {
+        data["buyboxToken"] = detail.buyboxToken;
+      } else {
+        data["buyboxToken"] = "not-present";
+      }
+
+      var objmktplace = "";
+      var total_objmktplace = (("offers" in detail) ? detail.offers.length : 0);
+      var isMarketPlace = false;
+      for (var i = 0; i < total_objmktplace; i++) {
+        objmktplace = objmktplace + detail.offers[i].id + " , ";
+        if (detail.offers[i]._embedded.seller.name != "B2W") {
+          isMarketPlace = true;
+        }
+      }
+
+      data["prd_objidmktplace"] = objmktplace.slice(0, -3);
+      data["prd_objmktplace"] = ((isMarketPlace == true) ? "sim" : "nao");
+
+      send(data, "product-staging", "load");
+    }
+
+    if (detail.page.type == "category") {
+      var data = load_basic_data(detail);
+      if ("page" in detail && "breadcrumb" in detail.page) {
+        var breadcrumb = "";
+        var total_breadcrumb = detail.page.breadcrumb.length;
+        for (var i = 0; i < totalVars; i++) {
+          breadcrumb = breadcrumb + detail.page.breadcrumb[i].name + " > ";
+        }
+        data['category_objBreadCrumb'] = breadcrumb.slice(0, -3);
+        data['category_objDepartamento'] = ((detail.page.breadcrumb.length > 0)
+            ? detail.page.breadcrumb[0].id : "");
+        data['category_objLinha'] = ((detail.page.breadcrumb.length > 1)
+            ? detail.page.breadcrumb[1].id : "");
+        data['category_objSubLinha'] = ((detail.page.breadcrumb.length > 2)
+            ? detail.page.breadcrumb[2].id : "");
+      }
+
+      send(data, "category-staging", "load");
+    }
+
+    if (detail.page.type == "search") {
+      var data = load_basic_data(detail);
+
+      data["objQuantResults"] = (("search" in detail && "results"
+      in detail.search) ? detail.search.results : "");
+      data["objPageName"] = detail.page.type;
+      data["objTextoBusca"] = (("search" in detail && "query" in detail.search)
+          ? detail.search.query : "");
+
+      send(data, "search-staging", "load");
+    }
+
+    var pageLoad = {"basic_data": load_basic_data(detail), "detail": detail};
+
+    send(pageLoad, "page-load-staging", detail.page.type);
+
+    return true;
+  });
+
+  document.addEventListener('recommendation:load', function (event) {
+    var detail = event.detail;
+
+    var recommendationLoad = {"basic_data": load_basic_data(detail), "detail": detail};
+
+    try {
+      page_type = detail.page.type;
+    } catch(e){
+      if (recommendationLoad["basic_data"]["nvg_location"].indexOf("/produto/") >= 0){
+        page_type = "product"
+      } else if (recommendationLoad["basic_data"]["nvg_location"].indexOf("/simple-basket") >= 0){
+        page_type = "basket"
+      } else {
+        page_type = "<missing_data>"
+      }
+    }
+
+    send(recommendationLoad, "recommendation-load-staging", page_type);
+
+    return true;
+  });
+
+  document.addEventListener('experiment:exposure', function (event) {
+    var detail = event.detail;
+
+    var experimentExposuse = {"basic_data": load_basic_data(detail), "detail": detail};
+
+    try{
+      project = detail.experiment.project
+    } catch(e){
+      project = "<missing_data>"
+    }
+
+    send(experimentExposuse, "experiment-exposure-staging", project);
+
+    return true;
+  });
+
+  //tell cage to load beacon
+  var event = document.createEvent("HTMLEvents");
+  event.initEvent("cage:beacon-load", true, true);
+  document.dispatchEvent(event);
+
+  //
+  // README This is a palliative solution to load beakman.js content on beacon.js,
+  // because we have some issues when try to load through Cage sandbox.
+  //
+  // http://stackoverflow.com/questions/950087/how-do-i-include-a-javascript-file-in-another-javascript-file
+  //
+  function loadScript(url, callback) {
+    try {
+      var head = document.getElementsByTagName('head')[0];
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = url;
+
+      // Then bind the event to the callback function.
+      // There are several events for cross browser compatibility.
+      script.onreadystatechange = callback;
+      script.onload = callback;
+
+      head.appendChild(script);
+    } catch (ex) {
+    }
+  }
+
+  loadScript('//statics-americanas.b2w.io/img/_staging/beakman_js/beakman.js',
+      function (e) {
+        console.log('beakman.js file was loaded');
+      });
+  loadScript(
+      '//statics-americanas.b2w.io/img/_staging/beakman_js/acom_beakman_payment_convert.js',
+      function (e) {
+        console.log('beakman.js file was loaded');
+      });
+
+})();

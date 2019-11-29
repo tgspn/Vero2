@@ -38,7 +38,7 @@ class KeyManagerActivity : AppCompatActivity() {
 
         try {
             thread {
-                list=database.keyDAO().all().toMutableList()
+                list=database.keyDAO().all()
                 adapter = KeysAdapter(this, list)
                 run {
                     lvKeys.adapter = adapter
@@ -85,6 +85,7 @@ class KeyManagerActivity : AppCompatActivity() {
                     )
                     thread {
                         database.keyDAO().add(keyMode)
+                        list.add(keyMode)
                         model.publicKey = keyMode.id
                         val url = getString(R.string.server_endpoint) + "api/validate/"
                         try {

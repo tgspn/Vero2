@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!-- saved from url=(0072)https://sacola.submarino.com.br/simple-basket/cage-2.0.1.html?outputID=4 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <script type="text/javascript">
+    function getParameterByName(name) {
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(window.location.href);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    };
+
+    function polyfill() {
+      if (typeof window !== 'undefined') {
+        try {
+          new window.CustomEvent('', {});
+        } catch (e) {
+          (function () {
+            function CustomEvent(event, params) {
+              params = params || { bubbles: false, cancelable: false, detail: undefined };
+              var evt = document.createEvent('CustomEvent');
+              evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+              return evt;
+            }
+
+            CustomEvent.prototype = window.Event.prototype;
+            window.CustomEvent = CustomEvent;
+          })();
+        }
+      }
+    };
+
+    function dispatcher() {
+      window.addEventListener('message', function (params) {
+        if (!/(americanas.com.br|submarino.com.br|shoptime.com.br|soubarato.com.br|(localhost:\d+))$/.test(params.origin)) 
+          throw new Error('Forbidden');
+
+        var data = JSON.parse(params.data);
+        if (!data) return;
+
+        var event;
+        var type = data.type;
+
+        if (type === 'cage:configuration' && data.data) {
+          iframeLoadManager({
+            id: getParameterByName('outputID'),
+            scripts: data.data.scripts || [],
+            waitLoadUntilEvent: data.data.waitLoadUntilEvent || ''
+          });
+        }
+              
+        delete data.type;
+        if (typeof window.CustomEvent === 'undefined') {
+          event = new Event(type, data);
+        } else {
+          event = new window.CustomEvent(type, data);
+        }
+
+        window.document.dispatchEvent(event);
+      }, false);
+    };
+
+    function notify(msg) {
+      window.top.postMessage(msg, '*');
+    };
+
+    function iframeLoadManager(params) {
+      if (params.waitLoadUntilEvent && params.waitLoadUntilEvent !== '') {
+        document.addEventListener(params.waitLoadUntilEvent, function() {
+          notify(JSON.stringify(
+            {type: 'cage:iframe:load:' + params.id}
+          ));
+        });
+      }
+
+      function done() {
+        wait--;
+
+        if (wait <= 0 && params.waitLoadUntilEvent === '') {
+          notify(JSON.stringify(
+            {type: 'cage:iframe:load:' + params.id}
+          ));
+        }
+      }
+
+      var head = document.head;
+      var wait = params.scripts.filter(function(script) {
+        return !!script['src'];
+      }).length;
+
+      for (var i = 0; i < params.scripts.length; i++) {
+        var script = params.scripts[i];
+        var element = document.createElement('script');
+
+        if (script['defer']) element.async = 'defer';
+
+        if (script['src']) {
+          element.onload = done;
+          element.onreadystatechange = done;
+          element.onerror = done;
+          element.src = script['src'];
+          if (script['async']) element.async = 'async';
+        } else {
+          element.innerHTML = script['inline'];
+        }
+
+        head.appendChild(element);
+
+        if (!script['src']) {
+          done();
+        }
+      }
+    };
+
+    window.document.addEventListener('DOMContentLoaded', function() {
+      window.top.postMessage(JSON.stringify(
+        {type: 'cage:iframe:domcontentloaded:' + getParameterByName('outputID')}
+      ), '*');
+    })
+
+    polyfill();
+    dispatcher();
+  </script>
+<script src="./neemu.min.js.download"></script></head>
+<body>
+
+</body></html>

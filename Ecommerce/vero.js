@@ -19,7 +19,7 @@ btn.addEventListener('click', () => {
       //Id: "355db715-e036-4ccf-8420-9395d5d21159",
       StoreName: storeName.value,
       Fields: fields,//["nome", "endereco", "email"],
-      Value: value.value
+      Value: value.value ? value.innerText : 0
     }
     ),
     success: (d, Status, jqXHR) => {
