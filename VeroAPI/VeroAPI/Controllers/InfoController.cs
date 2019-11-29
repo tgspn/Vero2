@@ -91,8 +91,8 @@ namespace VeroServer.Controllers
             try
             {
                 HyperledgerTest.VeroChain chain = new HyperledgerTest.VeroChain(id);
-                await Task.Run(async () => { await Task.Delay(2000); finalizado[model.Id] = model; });
-                await Task.Run(async() =>
+                await Task.Run(async () => { await Task.Delay(2500); finalizado[model.Id] = model; });
+                Task.Run(async() =>
                 {
                     try
                     {
