@@ -22,7 +22,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <!-- String for server-->
     <!--<string name="server_endpoint">http://10.115.66.56:8079/</string>-->
-    <string name="server_endpoint">http://192.168.0.104:8079/</string>
+    <!--<string name="server_endpoint">http://192.168.0.104:8079/</string>-->
+    <string name="server_endpoint">http://54.159.123.153:8079/</string>
     <!--<string name="server_endpoint">http://192.168.21.128:8079/</string>-->
     <string name="ok">Ok</string>
     <string name="cancel">Cancelar</string>

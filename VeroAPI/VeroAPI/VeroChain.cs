@@ -16,7 +16,7 @@ namespace HyperledgerTest
         public VeroChain(string username)
         {
 
-            var user = SampleUser.Load(username, @"D:\Projetos\Hyperledger\fabcar\hfc-key-store\");
+            var user = SampleUser.Load(username, @"hfc-key-store/");
             client = Hyperledger.Fabric.SDK.HFClient.Create();
             var crypto = new Hyperledger.Fabric.SDK.Security.CryptoPrimitives();
             crypto.Store.AddCertificate(user.Enrollment.Cert);
