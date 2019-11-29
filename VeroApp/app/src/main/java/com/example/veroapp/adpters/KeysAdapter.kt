@@ -31,12 +31,14 @@ class KeysAdapter(val context: Context,private var list: MutableList<KeyModel>) 
             var item = list[position]
             holder.computerName.text = item.computerName
             holder.date.text = item.date
+            holder.key.text=item.id
         }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val computerName = itemView.firstLine
         val date = itemView.secondLine
+        val key=itemView.txtKey
     }
 
 

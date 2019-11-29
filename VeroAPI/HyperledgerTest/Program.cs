@@ -12,7 +12,7 @@ namespace HyperledgerTest
 {
     class Program
     {
-        public static string ServerIP = "10.115.65.33";
+        public static string ServerIP = "192.168.0.105";//"10.115.65.33";
         static void Main(string[] args)
         {
             while (!Console.TreatControlCAsInput)

@@ -42,7 +42,6 @@
     "activeTab",
     "declarativeContent",
     "storage",
-    "cookies",
-    "*://*"
+    "cookies"
   ]
 }

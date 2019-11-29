@@ -6,14 +6,17 @@ import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 import com.example.veroapp.dao.KeyDAO
 import com.example.veroapp.dao.PessoaDAO
+import com.example.veroapp.dao.WalletDAO
 import com.example.veroapp.models.KeyModel
 import com.example.veroapp.models.PessoaModel
+import com.example.veroapp.models.WalletModel
 
-@Database(entities=[KeyModel::class,PessoaModel::class],version = 2,exportSchema = false )
+@Database(entities=[KeyModel::class,PessoaModel::class,WalletModel::class],version = 3,exportSchema = false )
  abstract class AppDatabase() : RoomDatabase() {
 
     abstract fun keyDAO(): KeyDAO
     abstract fun pessoaDAO(): PessoaDAO
+    abstract fun walletDAO(): WalletDAO
     companion object : SingletonHolder<AppDatabase, Context>({
         Room.databaseBuilder(it.applicationContext,
             AppDatabase::class.java, "vero-database")

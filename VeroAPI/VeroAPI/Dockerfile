@@ -5,10 +5,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:2.1-stretch AS build
 WORKDIR /src
-COPY ["HyperledgerTest/VeroAPI/VeroAPI.csproj", "HyperledgerTest/VeroAPI/"]
-RUN dotnet restore "HyperledgerTest/VeroAPI/VeroAPI.csproj"
+COPY ["VeroAPI/VeroAPI/VeroAPI.csproj", "VeroAPI/VeroAPI/"]
+RUN dotnet restore "VeroAPI/VeroAPI/VeroAPI.csproj"
 COPY . .
-WORKDIR "/src/HyperledgerTest/VeroAPI"
+WORKDIR "/src/VeroAPI/VeroAPI"
 RUN dotnet build "VeroAPI.csproj" -c Release -o /app
 
 FROM build AS publish
