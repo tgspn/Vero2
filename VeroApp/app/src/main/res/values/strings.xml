@@ -21,8 +21,9 @@
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <!-- String for server-->
-    <!--<string name="server_endpoint">http://10.115.66.50:8079/</string>-->
+    <!--<string name="server_endpoint">http://10.115.66.56:8079/</string>-->
     <string name="server_endpoint">http://192.168.0.104:8079/</string>
+    <!--<string name="server_endpoint">http://192.168.21.128:8079/</string>-->
     <string name="ok">Ok</string>
     <string name="cancel">Cancelar</string>
     <string name="title_activity_check_info">Enviar Dados</string>

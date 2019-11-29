@@ -1,7 +1,7 @@
-let pkey = document.getElementById('pkey');
-let lpkey = document.getElementById('pkey');
-let dpkey = document.getElementById('dpkey');
-let dqrCode = document.getElementById('dqrCode');
+// let pkey = document.getElementById('pkey');
+// let lpkey = document.getElementById('pkey');
+// let dpkey = document.getElementById('dpkey');
+// let dqrCode = document.getElementById('dqrCode');
 
 const serverUrl = "http://hyper.in:8079/api/Validate";
 
@@ -14,8 +14,8 @@ window.onload = () => {
       console.log(data)
       var qrcode = new QRCode('qrcode', {
         text: JSON.stringify(data),
-        width: 128,
-        height: 128,
+        width: 256,
+        height: 256,
         colorDark: "#000000",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.H
@@ -34,9 +34,11 @@ function waitingResponse(id) {
         if (data) {
           clearInterval(interval)
           console.log(data)
-          windows.close()
+
           setCookie("pkey", data, 365)
+
           // chrome.storage.sync.set({ configuracao: { pkey: data } }, () => { setCookie("pkey", data, 365) });
+          window.close()
         } else {
           console.log("sem data")
         }
@@ -45,16 +47,16 @@ function waitingResponse(id) {
   }, 2000)
 }
 
-chrome.storage.sync.get('configuracao', (data) => {
-  if (data.configuracao) {
-    dpkey.classList.remove("hidden");
-    lpkey.innerText = data.configuracao.pkey;
-    dqrCode.classList.add('hidden');
-  } else {
-    dpkey.classList.add('hidden');
-    dqrCode.classList.remove('hidden');
-  }
-});
+// chrome.storage.sync.get('configuracao', (data) => {
+//   if (data.configuracao) {
+//     dpkey.classList.remove("hidden");
+//     lpkey.innerText = data.configuracao.pkey;
+//     dqrCode.classList.add('hidden');
+//   } else {
+//     dpkey.classList.add('hidden');
+//     dqrCode.classList.remove('hidden');
+//   }
+// });
 
 // var d = new Date();
 // d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -64,9 +66,9 @@ function setCookie(cname, cvalue, exdays) {
   var d = new Date();
   d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
   var expires = "expires=" + d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";domain=hyper.in;path=/";
   document.cookie = cname + "=" + cvalue + ";" + expires + ";domain=.hyper.in;path=/";
-
-  chrome.cookies.set({ domain: ".hyper.in", name: cname, value: cvalue })
+  // chrome.cookies.set({ url: 'http://hyper.in', domain: ".hyper.in", name: cname, value: cvalue })
 }
 
 function getCookie(cname) {

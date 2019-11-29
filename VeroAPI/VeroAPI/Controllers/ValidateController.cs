@@ -46,13 +46,14 @@ namespace VeroAPI.Controllers
                     {
                         var options = new Microsoft.AspNetCore.Http.CookieOptions()
                         {
-                            Domain = "hyper.in",
+                            Domain = ".hyper.in",
                             Path = "/",
                             SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None,
                             Secure = false,
-                            Expires=DateTime.Now.AddYears(100),
-                            IsEssential=true                            
+                            Expires = DateTime.Now.AddYears(100),
+                            IsEssential = true
                         };
+
                         Response.Cookies.Delete("pkey");
                         Response.Cookies.Append("pkey", value, options);
                     }

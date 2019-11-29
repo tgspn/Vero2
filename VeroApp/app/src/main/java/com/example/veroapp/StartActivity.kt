@@ -46,6 +46,11 @@ class StartActivity : Activity() {
         val url = getString(R.string.server_endpoint) + "api/wallet"
 
         val response = khttp.post(url)
+
+
+        if(response.statusCode!=200)
+            throw Exception(Throwable(message =  response.statusCode.toString()))
+
         val wallet: String = response.headers!!["w-user"]!!
         val zipFile: ByteArray = response.content
 
