@@ -5,7 +5,8 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:2.1-stretch AS build
 WORKDIR /src
-COPY ["VeroAPI/VeroAPI/VeroAPI.csproj", "VeroAPI/VeroAPI/"]
+COPY ["DLL/","VeroAPI/DLL"]  
+COPY ["VeroAPI/", "VeroAPI/VeroAPI/"]
 RUN dotnet restore "VeroAPI/VeroAPI/VeroAPI.csproj"
 COPY . .
 WORKDIR "/src/VeroAPI/VeroAPI"
