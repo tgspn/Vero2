@@ -20,7 +20,7 @@ namespace VeroAPI
 
         public UserManager()
         {
-            keyStorePath = @"D:\Projetos\Hyperledger\fabcar\hfc-key-store\";
+            keyStorePath = @"hfc-key-store/";
             admin = SampleUser.Load("admin", keyStorePath);
             fabric_client = HFClient.Create();
             var crypto = new Hyperledger.Fabric.SDK.Security.CryptoPrimitives();
