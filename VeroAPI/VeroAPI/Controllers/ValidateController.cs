@@ -46,7 +46,7 @@ namespace VeroAPI.Controllers
                     {
                         var options = new Microsoft.AspNetCore.Http.CookieOptions()
                         {
-                            Domain = ".hyper.in",
+                            Domain = "54.159.123.153",
                             Path = "/",
                             SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None,
                             Secure = false,
